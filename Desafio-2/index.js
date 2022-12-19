@@ -50,13 +50,10 @@ class ProductManager {
             const file = await this.getProducts();
             const pos = file.findIndex(prod => prod.id === id);
             if(pos !== -1) {
-                const productFound = file.find(prod => prod.id === id);
-                product = {id: productFound.id, ...product};
+                product = {id: file[pos].id, ...product};
                 file.splice(pos, 1, product);
-                                //Ciclo infinito
+                console.log(file)
                 await fs.promises.writeFile(this.path, JSON.stringify(file, null, 2));
-                
-
             }
         } catch (error) {
             throw new Error("Id no encontrado");
