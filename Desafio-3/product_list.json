@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Macbook M1",
+    "description": "512GB",
+    "price": 2400,
+    "code": 1282,
+    "thumbnail": "awdawdwad",
+    "stock": 32
+  },
+  {
+    "title": "iPhone 13",
+    "description": "512GB",
+    "price": 1320,
+    "code": 882,
+    "thumbnail": "awdawdwad",
+    "stock": 53,
+    "id": 2
+  },
+  {
+    "title": "Macbook M1",
+    "description": "512GB",
+    "price": 2400,
+    "code": 1282,
+    "thumbnail": "awdawdwad",
+    "stock": 32,
+    "id": 3
+  }
+]
