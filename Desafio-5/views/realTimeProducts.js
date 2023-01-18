@@ -19,16 +19,10 @@ send.addEventListener('click', (e)=>{
 
         socket.emit('send_message', newProduct);
 
-        const productList = document.getElementById('listProducts');
 
-        const createChild = document.createElement('li');
-    
-        createChild.textContent = newProduct.title;
-    
-        productList.appendChild(createChild);
 
     }
 
-
 })
+
 

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div>
-        <form action="api/products"  method="post">
+        <form action="api/products" method="post" red>
             <h3 class="title">Producto A Agregar</h3>
             <div>
                 <label for="title">{{title}}</label>
@@ -45,7 +45,18 @@
     </div>
 
     <div>
-        {{{home}}}
+        {{#each productList}}
+     <div id="listProducts">
+    <ul>
+        <li>{{this.title}}</li>
+        <li>{{this.price}}</li>
+        <li>{{this.description}}</li>
+        <li>{{this.thumbnail}}</li>
+        <li>{{this.code}}</li>
+        <li>{{this.stock}}</li>
+    </ul>
+</div>
+    {{/each}}
     </div>
     <script src="realTimeProducts.js" type="application/javascript"></script>
 </body>
