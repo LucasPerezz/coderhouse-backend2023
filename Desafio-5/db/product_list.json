@@ -1,0 +1,14 @@
+[
+  {
+    "title": "iPhone 12",
+    "price": "879",
+    "description": "256GB",
+    "code": "29182",
+    "stock": "53",
+    "category": "iphone",
+    "thumbnail": "Captura.JPG",
+    "form": "",
+    "id": 11,
+    "status": true
+  }
+]

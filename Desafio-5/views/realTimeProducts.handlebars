@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <div>
+        <form action="api/products"  method="post">
+            <h3 class="title">Producto A Agregar</h3>
+            <div>
+                <label for="title">{{title}}</label>
+                <input class="input" type="text" id="title" name="title" placeholder="Nombre del producto" required>
+            </div>
+            <div>
+                <label for="price">{{price}}</label>
+                <input class="input" type="number" id="price" min=0 name="price" placeholder="Precio" required>
+            </div>
+                <div>
+                <label for="description">{{description}}</label>
+                <input type="text" id="description" name="description" placeholder="Descripcion" required>
+            </div>
+            <div>
+                <label for="code">{{description}}</label>
+                <input type="number" id="code" name="code" placeholder="Codigo" required>
+            </div>
+            <div>
+                <label for="stock">{{description}}</label>
+                <input type="number" id="stock" name="stock" placeholder="Stock" required>
+            </div>
+            <div>
+                <label for="category">{{description}}</label>
+                <input type="text" id="category" name="category" placeholder="Categoria" required>
+            </div>
+            <div>
+                <label for="thumbnail">{{Thumbnail}}</label>
+                <input type="FILE" id="thumbnail" name="thumbnail" required>
+            </div>
+            <input type="hidden" name="form">
+            <button class="btn" id="submitButton" type="submit" value="Save product"> Agregar producto </button>
+        </form>
+    </div>
+
+    <div>
+        {{{home}}}
+    </div>
+    <script src="realTimeProducts.js" type="application/javascript"></script>
+</body>
+</html>
