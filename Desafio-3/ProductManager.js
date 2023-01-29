@@ -80,7 +80,7 @@ const validate = (product) => {
 }
 
 
-const classControl = new ProductManager("./../db/product_list.json");
+const classControl = new ProductManager("./db/product_list.json");
 
 
 module.exports = classControl;

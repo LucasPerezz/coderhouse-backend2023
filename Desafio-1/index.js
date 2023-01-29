@@ -7,7 +7,7 @@ class ProductManager {
     }
 
 
-    addProduct(product) {
+    async addProduct(product) {
         if(this.products.findIndex(prod => prod.code === product.code) === -1 && validate(product) === 1) {
             product = {...product, id: ProductManager.productId};
             this.products.push(product);

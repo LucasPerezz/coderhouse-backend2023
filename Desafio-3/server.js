@@ -1,7 +1,6 @@
 const express = require('express');
 const ProductManager = require('./ProductManager');
 const app = express();
-const port = 8080;
 app.use(express.urlencoded({extended: true}))
 
 app.get('/products', async (req, res) => {
@@ -15,6 +14,7 @@ app.get('/products/:id', async (req, res) => {
     res.json(await ProductManager.getProductById(params));
 })
 
+const port = 3080;
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Escuchando en el puerto ${port}`)
   })

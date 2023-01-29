@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 class ProductManager {
-    static productId = 1;
     constructor(path) {
         this.path = path;
     }
@@ -11,10 +10,10 @@ class ProductManager {
         try {
             const file = await this.getProducts();
             if(file.findIndex(prod => prod.code === product.code) === -1 && validate(product) === 1) {
-                product = {...product, id: ProductManager.productId};
+                const productId = file.length + 1;
+                product = {...product, id: productId};
                 file.push(product);
                 await fs.promises.writeFile(this.path, JSON.stringify(file, null, 2));
-                ProductManager.productId++;
             }
         } catch (error) {
             throw new Error("Error, codigo repetido");
@@ -52,7 +51,6 @@ class ProductManager {
             if(pos !== -1) {
                 product = {id: file[pos].id, ...product};
                 file.splice(pos, 1, product);
-                console.log(file)
                 await fs.promises.writeFile(this.path, JSON.stringify(file, null, 2));
             }
         } catch (error) {
@@ -124,7 +122,7 @@ const main = async () => {
     // console.log(await classControl.getProductById(2));
 
     //4- ACTUALIZAR PRODUCTO (CICLO INFINITO)
-    // await classControl.updateProduct(1, product3);
+    await classControl.updateProduct(1, product3);
 
     // 5- ELIMINAR PRODUCTO SELECCIONADO (FUNCIONA)
     // await classControl.deleteProduct(2);
