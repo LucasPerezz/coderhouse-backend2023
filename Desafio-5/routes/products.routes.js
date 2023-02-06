@@ -1,7 +1,7 @@
 const express = require('express');
 const ProductManager = require('../ProductManager');
 const productsRouter = express.Router();
-const productsModel = require('./../models/products.model')
+const productsModel = require('../models/product.model')
 
 
 productsRouter.get('/', async (req, res) => {

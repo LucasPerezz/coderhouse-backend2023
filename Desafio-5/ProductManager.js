@@ -1,20 +1,12 @@
-const fs = require('fs');
+const productModel = require('./models/product.model');
 
 class ProductManager {
-    constructor(path) {
-        this.path = path;
-    }
-
-
      async addProduct(product) {
         try {
-            const file = await this.getProducts();
-            if(file.findIndex(prod => prod.code === product.code) === -1 && validate(product) === 1) {
-                const productId = file.length + 1;
-                product = {...product, id: productId};
+            const listProducts = await this.getProducts();
+            if(listProducts.findIndex(prod => prod.code === product.code) === -1 && validate(product) === 1) {
                 if(!product.status) product = {...product, status: true};
-                file.push(product);
-                await fs.promises.writeFile(this.path, JSON.stringify(file, null, 2));
+                await productModel.create(product);
                 return {message: "Product added"}
             }
         } catch (error) {
@@ -25,7 +17,7 @@ class ProductManager {
 
     async getProducts() {
         try {
-            const file = await fs.promises.readFile(this.path, 'utf-8');
+            const file = await productModel.find();
             return JSON.parse(file);
         } catch (error) {
             return [];
@@ -34,9 +26,8 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            const file = await this.getProducts();
-            let productFound = file.find(prod => prod.id === id);
-            if(productFound === undefined) {
+            let productFound = await productModel.findOne(id)
+            if(!productFound) {
                 throw new Error("Not found");
             } else {
                 return productFound;
@@ -48,26 +39,26 @@ class ProductManager {
 
     async updateProduct(id, product) {
         try {
-            const file = await this.getProducts();
-            const pos = file.findIndex(prod => prod.id === id);
-            if(pos !== -1) {
-                product = {id: file[pos].id, ...product};
-                file.splice(pos, 1, product);
-                await fs.promises.writeFile(this.path, JSON.stringify(file, null, 2));
-                return {message: "Product updated"}
+            let productFound = await productModel.find(id);
+            if(!productFound) throw new Error("Product not found");
+            else {
+                if(validate(product) === 1){ 
+                    await productModel.updateOne({_id: id}, product);
+                    return "Product updated"
+                }
             }
         } catch (error) {
-            throw new Error("Id no encontrado");
+            throw new Error("Product not found");
         }
     }
 
     async deleteProduct(id) {
         try {
-            const file = await this.getProducts();
-            if(file.findIndex(prod => prod.id === id) !== -1) {
-                const deleteProduct = file.filter(prod => prod.id !== id);
-                await fs.promises.writeFile(this.path, JSON.stringify(deleteProduct, null, 2));
-                return {message: "Product deleted"}
+            let productFound = await productModel.findOne(id);
+            if(!productFound) throw new Error("Product not found")
+            else {
+                await productModel.deleteOne({_id: id});
+                return "Product deleted"
             }
         } catch (error) {
             console.log(error);
@@ -84,7 +75,7 @@ const validate = (product) => {
 }
 
 
-const classControl = new ProductManager("./db/product_list.json");
+const classControl = new ProductManager();
 
 
 module.exports = classControl;

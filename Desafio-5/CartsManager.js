@@ -1,18 +1,12 @@
-const fs = require('fs')
+const cartModel = require('./models/cart.model');
 const productManager = require('./ProductManager');
 
 class CartsManager {
-    static cartsId = 1;
-    constructor(path) {
-        this.path = path;
-        this.carts = [];
-    }
-
 
     async getAllCarts() {
         try {
-            this.carts = await fs.promises.readFile(this.path, "utf-8");
-            return JSON.parse(this.carts);
+            const carts = await cartModel.find();
+            return JSON.parse(carts);
         } catch (error) {
             return [];
         }
@@ -42,10 +36,11 @@ class CartsManager {
 
     async getCartById(id) {
         try {
-            this.carts = await this.getAllCarts();
-            let cartFound = this.carts.find(c => c.id === id);
-            if(cartFound === undefined) throw new Error("Not found");
-            return cartFound;
+            let cart = await cartModel.findOne(id);
+            if(!cart) throw new Error("Cart not found")
+            else {
+                return cart;
+            }
         } catch (error) {
             console.log(error);
         }
@@ -60,7 +55,6 @@ class CartsManager {
             const posCart = this.carts.findIndex(c => c.id === cartId);
             if(posCart === -1) return "cart id is incorrect";
 
-            //REVISAR
             if(!await productManager.getProductById(prodId)) return "The product does not exist"
 
             const posProduct = this.carts[posCart].products.findIndex(p => p.id === prodId);
