@@ -11,7 +11,7 @@ productsRouter.get('/', async (req, res) => {
 })
 
 productsRouter.get('/:id', async (req, res) => {
-    const params = Number(req.params.id);
+    const params = req.params.id;
     res.json(await ProductManager.getProductById(params));
 })
 
@@ -21,13 +21,13 @@ productsRouter.post('/', async (req, res) => {
 })
 
 productsRouter.put('/:id', async (req, res) => {
-    let id = +req.params.id;
+    let id = req.params.id;
     let product = req.body;
     res.json(await ProductManager.updateProduct(id, product));
 })
 
 productsRouter.delete("/:id", async (req, res) => {
-    let id = +req.params.id;
+    let id = req.params.id;
     res.json(await ProductManager.deleteProduct(id));
 })
 

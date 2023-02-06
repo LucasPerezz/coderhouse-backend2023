@@ -14,13 +14,13 @@ cartsRouter.get('/', async (req, res) => {
 
 
 cartsRouter.get('/:cid', async (req, res) => {
-    let id = +req.params.cid;
+    let id = req.params.cid;
     res.json(await cartsManager.getCartById(id));
 })
 
 cartsRouter.post('/:cid/product/:pid', async (req, res) => {
-    let cartId = Number(req.params.cid);
-    let productId = Number(req.params.pid);
+    let cartId = req.params.cid;
+    let productId = req.params.pid;
 
     const cartList = await cartsManager.addProductInCartSelected(cartId, productId)
     res.json(cartList);

@@ -6,11 +6,12 @@ class ProductManager {
             const listProducts = await this.getProducts();
             if(listProducts.findIndex(prod => prod.code === product.code) === -1 && validate(product) === 1) {
                 if(!product.status) product = {...product, status: true};
+                console.log(product)
                 await productModel.create(product);
                 return {message: "Product added"}
             }
         } catch (error) {
-            throw new Error("Error, codigo repetido");
+            throw new Error("Error, codigo repetido", error);
         }
 
     }
@@ -26,7 +27,7 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            let productFound = await productModel.findOne(id)
+            let productFound = await productModel.findOne({_id: id})
             if(!productFound) {
                 throw new Error("Not found");
             } else {
@@ -39,7 +40,7 @@ class ProductManager {
 
     async updateProduct(id, product) {
         try {
-            let productFound = await productModel.find(id);
+            let productFound = await productModel.findOne({_id: id});
             if(!productFound) throw new Error("Product not found");
             else {
                 if(validate(product) === 1){ 
@@ -54,7 +55,7 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
-            let productFound = await productModel.findOne(id);
+            let productFound = await productModel.findOne({_id: id});
             if(!productFound) throw new Error("Product not found")
             else {
                 await productModel.deleteOne({_id: id});

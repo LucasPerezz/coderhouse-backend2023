@@ -5,7 +5,7 @@ class CartsManager {
 
     async getAllCarts() {
         try {
-            const carts = await cartModel.find();
+            const carts = await cartModel.find().populate('products._id');
             return JSON.parse(carts);
         } catch (error) {
             return [];
@@ -14,19 +14,11 @@ class CartsManager {
 
     async addCart(product) {
         try {
-            this.carts = await this.getAllCarts();
-
             if(!Array.isArray(product)) {
                 return "it is not array";
             }
 
-            const newCart = 
-                {
-                    id: this.carts.length + 1,
-                    products: product
-                }
-            this.carts.push(newCart);
-            await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 2));
+            await cartModel.create({products: product, qty: 1})
 
             return {message: "Cart Created"}
         } catch (error) {
@@ -36,7 +28,7 @@ class CartsManager {
 
     async getCartById(id) {
         try {
-            let cart = await cartModel.findOne(id);
+            let cart = await cartModel.findOne({_id: id}).populate('products._id');
             if(!cart) throw new Error("Cart not found")
             else {
                 return cart;
@@ -50,34 +42,32 @@ class CartsManager {
     async addProductInCartSelected(cartId, prodId) {
         try {
 
-            this.carts = await this.getAllCarts();
+            const cart = await cartModel.findOne(cartId);
+            if(!cart) throw new Error("Cart not found");
 
-            const posCart = this.carts.findIndex(c => c.id === cartId);
-            if(posCart === -1) return "cart id is incorrect";
+            if(!await productManager.getProductById(prodId)) return "The product does not exist";
 
-            if(!await productManager.getProductById(prodId)) return "The product does not exist"
-
-            const posProduct = this.carts[posCart].products.findIndex(p => p.id === prodId);
+            const posProduct = cart.products.findIndex(p => p.id === prodId);
             if(posProduct === -1) {
                 const newProd = {
                     id: prodId,
                     qty: 1
                 }
+                cart.products.push(newProd);
 
-                this.carts[posCart].products.push(newProd);
+                await cart.updateOne({_id: cartId}, cart);
             }
 
-            if(!this.carts[posCart].products[posProduct]) {
-                this.carts[posCart].products[posProduct] = {
-                    ...this.carts[posCart].products[posProduct],
-                    qty: 1
+            if(!cart.products[posProduct]) {
+                cart.products[posProduct] = {
+                    ...cart.products[posProduct],
+                    qty: 1,
                 }
             } else {
-                this.carts[posCart].products[posProduct].qty++;
+                cart.products[posProduct].qty++;
             }
 
-            await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 2));
-
+            await cartModel.updateOne({_id: cartId}, cart);
             return {message: "product added"};
 
         } catch (error) {
@@ -88,6 +78,6 @@ class CartsManager {
 
 }
 
-const cartsManager = new CartsManager('./db/Carts_list.json');
+const cartsManager = new CartsManager();
 
 module.exports = cartsManager
