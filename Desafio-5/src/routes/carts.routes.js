@@ -26,4 +26,27 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
     res.json(cartList);
 })
 
+cartsRouter.delete('/api/carts/:cid/products/:pid', async (req, res) => {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
+})
+
+cartsRouter.put('/api/carts/:cid', async (req, res) => {
+    let products = req.body;
+    let cartId = req.params.cid;
+    res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, products));
+})
+
+cartsRouter.put('/api/carts/:cid/products/:pid', async (req, res) => {
+    //SOLO Actualiza la cantidad de stock del producto
+})
+
+cartsRouter.delete('/api/carts/:cid', async (req, res) => {
+    let cartId = req.params.cid;
+    res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
+})
+
+
+
 module.exports = cartsRouter

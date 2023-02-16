@@ -5,7 +5,7 @@ class CartsManager {
 
     async getAllCarts() {
         try {
-            const carts = await cartModel.find().populate('');
+            const carts = await cartModel.find();
             console.log(carts)
             return carts;
         } catch (error) {
@@ -75,6 +75,52 @@ class CartsManager {
 
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async deleteProductInCartSelected(cartId, productId) {
+        try {
+            const cartSelected = await cartModel.findOne({_id: cartId});
+            const deleteProduct = cartSelected.products.map(p => p.product._id !== productId);
+            await cartModel.updateOne({_id: cartId}, deleteProduct);
+            return {message: "Product eliminated"}
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updatedProductsInCartSelected(cartId, products) {
+        try {
+            
+            if(!Array.isArray(products)) {
+                throw new Error("Not array")
+            }
+
+            const cartSelected = await cartModel.findOne({_id: cartId});
+            cartSelected.products = products;
+            await cartModel.updateOne({_id: cartId}, cartSelected);
+            return {message: "products updated"}
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateStockOfProductInCartSelected(cartId, productId) {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    async delelteAllProductsInTheCart(cartId) {
+        try {
+            const cartSelected = await cartModel.findOne({_id: cartId});
+            cartSelected.products = [];
+            await cartModel.updateOne({_id: cartId}, cartSelected);
+            return {message: "products deleted "}
+        } catch (error) {
+            
         }
     }
 
