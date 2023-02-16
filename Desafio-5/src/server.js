@@ -19,6 +19,7 @@ const port = 8080;
 dotenv.config();
 const PASSWORD = process.env.PASSWORD;
 const USERNAME = process.env.USERNAME;
+const STRING_CONNECTION = `mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority`
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
@@ -47,7 +48,7 @@ server.listen(port, () => {
 
 
 
-mongoose.connect(`mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority`, (err) => {
+mongoose.connect(STRING_CONNECTION, (err) => {
   if(err) {
     console.log("Cannot conect to database: " + err)
     process.exit()

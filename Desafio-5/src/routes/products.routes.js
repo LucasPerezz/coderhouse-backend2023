@@ -4,9 +4,25 @@ const productsRouter = express.Router();
 
 
 productsRouter.get('/', async (req, res) => {
-    let {limit} = req.query;
-    const products = await ProductManager.getProducts();
-    (limit && !isNaN(limit)) ? res.json(products.slice(0, limit)) : res.json(products);
+    let {limit, page, query, sort} = req.query;
+    let productsList = await ProductManager.getProducts();
+    if(limit && !isNaN(limit)) {
+        productsList.slice(0, limit);
+    }
+    if(sort && (sort === 'asc' || sort === 'desc')) {
+        if(sort === 'asc') {
+            productsList.sort((a, b) => a.price > b.price);
+        } else {
+            productsList.sort((a, b) => a.price < b.price);
+        }
+    }
+    if(query) {
+        productsList.filter(p => p.title == query)
+    }
+    if(page) {
+        //A terminar
+    }
+    res.json(productsList);
 })
 
 productsRouter.get('/:id', async (req, res) => {
