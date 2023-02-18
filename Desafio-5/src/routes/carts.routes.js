@@ -26,9 +26,9 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
     res.json(cartList);
 })
 
-cartsRouter.delete('/api/carts/:cid/products/:pid', async (req, res) => {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
+cartsRouter.delete('/api/carts/:cid/product/:pid', async (req, res) => {
+    let cartId = req.params.cid;
+    let productId = req.params.pid;
     res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
 })
 
@@ -39,7 +39,10 @@ cartsRouter.put('/api/carts/:cid', async (req, res) => {
 })
 
 cartsRouter.put('/api/carts/:cid/products/:pid', async (req, res) => {
-    //SOLO Actualiza la cantidad de stock del producto
+    let cartId = req.params.cid;
+    let productId = req.params.pid;
+    let quantity = req.body.quantity;
+    res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, productId, quantity))
 })
 
 cartsRouter.delete('/api/carts/:cid', async (req, res) => {

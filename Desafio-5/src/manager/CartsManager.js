@@ -13,6 +13,7 @@ class CartsManager {
         }
     }
 
+    //Funciona
     async addCart(product) {
         try {
             if(!Array.isArray(product)) {
@@ -21,7 +22,7 @@ class CartsManager {
             
             console.log(await cartsManager.getAllCarts())
 
-            await cartModel.create({products: product, qty: 1})
+            await cartModel.create({products: product, quantity: 1})
 
             return {message: "Cart Created"}
         } catch (error) {
@@ -29,9 +30,11 @@ class CartsManager {
         }
     }
 
+    //Funciona
     async getCartById(id) {
         try {
-            let cart = await cartModel.findOne({_id: id});
+            let cart = await cartModel.findById(id).lean();
+            console.log(cart);
             if(!cart) throw new Error("Cart not found")
             else {
                 return cart;
@@ -41,36 +44,21 @@ class CartsManager {
         }
     }
 
-
+    //Funciona
     async addProductInCartSelected(cartId, prodId) {
         try {
 
-            const cart = await cartModel.findOne(cartId);
-            if(!cart) throw new Error("Cart not found");
+            let cart = await this.getCartById(cartId);
+            let productExits = cart.products.find(prod => prod.product._id == prodId);
 
-            if(!await productManager.getProductById(prodId)) return "The product does not exist";
-
-            const posProduct = cart.products.findIndex(p => p.id === prodId);
-            if(posProduct === -1) {
-                const newProd = {
-                    id: prodId,
-                    qty: 1
-                }
-                cart.products.push(newProd);
-
-                await cart.updateOne({_id: cartId}, cart);
-            }
-
-            if(!cart.products[posProduct]) {
-                cart.products[posProduct] = {
-                    ...cart.products[posProduct],
-                    qty: 1,
-                }
+            if(!!productExits) {
+                let productIndex = cart.products.indexOf(productExits);
+                cart.products[productIndex].quantity++;
             } else {
-                cart.products[posProduct].qty++;
+                cart.products.push({product: prodId, quantity: 1});
             }
 
-            await cartModel.updateOne({_id: cartId}, cart);
+            await cartModel.updateOne({_id: cartId}, {products: cart.products});
             return {message: "product added"};
 
         } catch (error) {
@@ -80,47 +68,55 @@ class CartsManager {
 
     async deleteProductInCartSelected(cartId, productId) {
         try {
-            const cartSelected = await cartModel.findOne({_id: cartId});
-            const deleteProduct = cartSelected.products.map(p => p.product._id !== productId);
-            await cartModel.updateOne({_id: cartId}, deleteProduct);
+            const cartSelected = await cartsManager.getCartById(productId);
+            const productExits = cartSelected.products.find(prod => prod.product._id == productId);
+            if(!!!productExits) throw new Error("No existe el producto")
+            const productIndex = cartSelected.products.indexOf(productExits);
+            cartSelected.products.splice(productIndex, 1);
+            await cartModel.updateOne({_id: cartId}, {products: cartSelected.products});
             return {message: "Product eliminated"}
         } catch (error) {
             console.log(error);
         }
     }
 
+    //Funciona
     async updatedProductsInCartSelected(cartId, products) {
         try {
-            
-            if(!Array.isArray(products)) {
-                throw new Error("Not array")
+            let cart = await this.getCartById(cartId);
+            let productExits = cart.products.find(prod => prod.product._id == products);
+            if(!!productExits) {
+                let productIndex = cart.products.indexOf(productExits);
+                cart.products[productIndex].quantity++;
+            } else {
+                cart.products.push({product: products, quantity: 1});
             }
-
-            const cartSelected = await cartModel.findOne({_id: cartId});
-            cartSelected.products = products;
-            await cartModel.updateOne({_id: cartId}, cartSelected);
+            await cartModel.updateOne({_id: cartId}, {products: cart.products});
             return {message: "products updated"}
         } catch (error) {
             console.log(error);
         }
     }
 
-    async updateStockOfProductInCartSelected(cartId, productId) {
+    async updateStockOfProductInCartSelected(cartId, productId, qty) {
         try {
-            
+            let cart = await this.getCartById(cartId);
+            console.log(cart)
+            let product = cart.products.find(prod => prod.product == productId);
+            let productIndex = cart.products.indexOf(product);
+            cart.products[productIndex].quantity = qty;
+            await cartModel.updateOne({_id: cartId}, {products: cart.products})
         } catch (error) {
-            
+            throw new Error(error)
         }
     }
 
     async delelteAllProductsInTheCart(cartId) {
         try {
-            const cartSelected = await cartModel.findOne({_id: cartId});
-            cartSelected.products = [];
-            await cartModel.updateOne({_id: cartId}, cartSelected);
+            await cartModel.updateOne({_id: cartId}, {products: []});
             return {message: "products deleted "}
         } catch (error) {
-            
+            console.log(error)
         }
     }
 

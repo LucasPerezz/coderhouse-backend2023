@@ -11,6 +11,7 @@ const io = new Server(server);
 
 const productsRouter = require('./routes/products.routes');
 const cartsRouter = require('./routes/carts.routes');
+const MessageManager = require('./manager/MessageManager');
 const viewsRouter = require('./routes/views.router');
 const mongoose = require('mongoose');
 
@@ -31,16 +32,40 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter);
 
+const conectedUsers = [];
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
+io.on('connection', socket => {
+  console.log('Cliente conectado');
 
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected")
-    })
+  socket.on('new_message', async msg => {
+    await MessageManager.addMessage(msg);
 
-});
+    let messages = await MessageManager.getMessages().lean();
+
+    io.emit('messages_log', messages)
+  })
+
+  socket.on('new_user', async user => {
+    let messages = await MessageManager.getMessages().lean();
+    let validationObj = {
+      validation: true,
+      user,
+      messages
+    }
+
+    if(conectedUsers.includes(user)) {
+      validationObj.validation = false
+    } else {
+      conectedUsers.push(user);
+    }
+
+    socket.emit('auth_user', validationObj);
+
+    if(validationObj.validation) socket.broadcast.emit('new_user_connected', user);
+  })
+})
+
 
 server.listen(port, () => {
   console.log("Listening on 8080")

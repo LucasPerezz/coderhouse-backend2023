@@ -1,28 +1,45 @@
 const express = require('express');
 const ProductManager = require('../manager/ProductManager');
+const productModel = require('../models/product.model');
 const productsRouter = express.Router();
 
 
 productsRouter.get('/', async (req, res) => {
-    let {limit, page, query, sort} = req.query;
-    let productsList = await ProductManager.getProducts();
-    if(limit && !isNaN(limit)) {
-        productsList.slice(0, limit);
+
+    const limit = req.query.limit || 10;
+    const page = req.query.page || 1;
+    const query = (req.query.query) ? JSON.parse(req.query.query) : {};
+    const sort = req.query.sort;
+
+    if(!limit && !page && !query && !sort) {
+        const products = await ProductManager.getProducts();
+        res.json({
+            status: 'sucess',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage && `localhost:8080/api/products?limit=${limit}&page=${products.prevPage}&sort=${sort}&query=${query}`,
+            nextLink: products.nextLink && `localhost:8080/api/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&query=${query}`
+        })
+    } else {
+        const products = await ProductManager.getProductsWithFilters(limit, page, query, sort);
+        res.json({
+            status: 'sucess',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage && `localhost:8080/api/products?limit=${limit}&page=${products.prevPage}&sort=${sort}&query=${query}`,
+            nextLink: products.nextLink && `localhost:8080/api/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&query=${query}`
+        })
     }
-    if(sort && (sort === 'asc' || sort === 'desc')) {
-        if(sort === 'asc') {
-            productsList.sort((a, b) => a.price > b.price);
-        } else {
-            productsList.sort((a, b) => a.price < b.price);
-        }
-    }
-    if(query) {
-        productsList.filter(p => p.title == query)
-    }
-    if(page) {
-        //A terminar
-    }
-    res.json(productsList);
+
+    
 })
 
 productsRouter.get('/:id', async (req, res) => {

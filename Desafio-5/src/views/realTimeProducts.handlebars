@@ -45,8 +45,8 @@
     </div>
 
     <div>
-        {{#each productList}}
-     <div id="listProducts">
+        {{#each products}}
+     <div id="list_products">
     <ul>
         <li>{{this.title}}</li>
         <li>{{this.price}}</li>
@@ -58,6 +58,7 @@
 </div>
     {{/each}}
     </div>
-    <script src="realTimeProducts.js" type="application/javascript"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="./../public/js/realTimeProducts.js" type="application/javascript"></script>
 </body>
 </html>

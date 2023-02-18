@@ -1,0 +1,38 @@
+<div>
+    <div>
+        <h1>Lista de productos</h1>
+        <div>
+            {{#each products.payload}}
+                <div>
+                    <div>
+                        <img src="{{this.thumbnail}}" alt="{{this.title}}">
+                        <div>
+                            <h5>{{this.title}}</h5>
+                            <a href="/products/{{this._id}}">Ver detalle</a>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+
+        {{#if products.pagination.active}}
+            <nav>
+                <ul>
+                    <li>
+                        <a href="{{products.pagination.prevLink}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {{#each products.pagination.pagesLinks}}
+                        <li><a class="page-link{{#if active}} active {{/if}}" href="{{link}}">{{page}}</a></li>
+                    {{/each}}
+                    <li>
+                        <a href="{{products.pagination.nextLink}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        {{/if}}
+    </div>
+</div>

@@ -1,6 +1,8 @@
 const productModel = require('../models/product.model');
 
 class ProductManager {
+
+    //Funciona
      async addProduct(product) {
         try {
             const listProducts = await this.getProducts();
@@ -16,15 +18,24 @@ class ProductManager {
 
     }
 
+    //Funciona
     async getProducts() {
         try {
             const file = await productModel.find();
+            console.log(file)
             return file;
         } catch (error) {
             return [];
         }
     }
 
+    //Funciona
+    async getProductsWithFilters(limit, page, query, sort) {
+        return productModel.paginate(query, {limit, page, sort:{price:sort}, lean: true});
+    }
+
+
+    //Funciona
     async getProductById(id) {
         try {
             let productFound = await productModel.findOne({_id: id});
@@ -38,6 +49,7 @@ class ProductManager {
         }
     }
 
+    //Funciona
     async updateProduct(id, product) {
         try {
             let productFound = await productModel.findOne({_id: id});
@@ -53,6 +65,7 @@ class ProductManager {
         }
     }
 
+    //Funciona
     async deleteProduct(id) {
         try {
             let productFound = await productModel.findOne({_id: id});
