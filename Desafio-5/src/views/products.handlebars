@@ -1,14 +1,16 @@
-<div>
+<div class="min-h-full w-full container mx-auto mt-8">
     <div>
-        <h1>Lista de productos</h1>
-        <div>
+        <h1 class="text-3xl text-center font-bold">Lista de productos</h1>
+        <div class="w-full grid grid-cols-1 lg:flex lg:flex-row gap-4 lg:gap-7 lg:gap-10 mx-auto justify-center items-center">
             {{#each products.payload}}
-                <div>
-                    <div>
-                        <img src="{{this.thumbnail}}" alt="{{this.title}}">
-                        <div>
-                            <h5>{{this.title}}</h5>
-                            <a href="/products/{{this._id}}">Ver detalle</a>
+                <div class="w-full max-w-[320px] bg-gray-100 h-[400px] mx-auto">
+                    <div class="flex justify-between mx-auto flex-col h-[400px] p-5">
+                        <img src="{{this.thumbnail}}" alt="{{this.title}}" class="mx-auto w-full h-[250px] object-contain">
+                        <hr>
+                        <div class="flex flex-col gap-4">
+                            <h5 class="text-lg">{{this.title}}</h5>
+                            <h4 class="text-sm">${{this.price}}</h4>
+                            <a href="/products/{{this._id}}" class="bg-sky-400 py-2 px-4 mx-auto text-white rounded-md mt-6">Ver detalle</a>
                         </div>
                     </div>
                 </div>

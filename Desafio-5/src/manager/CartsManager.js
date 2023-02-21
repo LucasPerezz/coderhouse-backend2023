@@ -33,7 +33,7 @@ class CartsManager {
     //Funciona
     async getCartById(id) {
         try {
-            let cart = await cartModel.findById(id).lean();
+            let cart = await cartModel.findById(id);
             console.log(cart);
             if(!cart) throw new Error("Cart not found")
             else {
@@ -66,12 +66,14 @@ class CartsManager {
         }
     }
 
+    //funciona
     async deleteProductInCartSelected(cartId, productId) {
         try {
-            const cartSelected = await cartsManager.getCartById(productId);
+            const cartSelected = await cartsManager.getCartById(cartId);
             const productExits = cartSelected.products.find(prod => prod.product._id == productId);
             if(!!!productExits) throw new Error("No existe el producto")
             const productIndex = cartSelected.products.indexOf(productExits);
+            console.log(productIndex)
             cartSelected.products.splice(productIndex, 1);
             await cartModel.updateOne({_id: cartId}, {products: cartSelected.products});
             return {message: "Product eliminated"}
@@ -100,17 +102,32 @@ class CartsManager {
 
     async updateStockOfProductInCartSelected(cartId, productId, qty) {
         try {
-            let cart = await this.getCartById(cartId);
-            console.log(cart)
-            let product = cart.products.find(prod => prod.product == productId);
-            let productIndex = cart.products.indexOf(product);
-            cart.products[productIndex].quantity = qty;
-            await cartModel.updateOne({_id: cartId}, {products: cart.products})
+            let ind;
+            let cart = await cartModel.find({_id: cartId});
+            const Nproducts = cart[0].products;
+            Nproducts.forEach((element, index) => {
+                if(productId === element.product._id.toJSON()) {
+                    ind = index;
+                }
+            });
+
+            if(!isNaN(ind)) {
+                Nproducts[ind].quantity = qty.quantity;
+                const result = cartModel
+                .find({_id: cartId})
+                .updateMany({products: Nproducts})
+                return result;
+            }
+            // let product = cart.products.find(prod => prod.product == productId);
+            // let productIndex = cart.products.indexOf(product);
+            // cart.products[productIndex].quantity = qty;
+            // await cartModel.updateOne({_id: cartId}, {products: cart.products})
         } catch (error) {
             throw new Error(error)
         }
     }
 
+    //funciona
     async delelteAllProductsInTheCart(cartId) {
         try {
             await cartModel.updateOne({_id: cartId}, {products: []});

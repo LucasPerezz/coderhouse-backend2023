@@ -26,26 +26,26 @@ cartsRouter.post('/:cid/product/:pid', async (req, res) => {
     res.json(cartList);
 })
 
-cartsRouter.delete('/api/carts/:cid/product/:pid', async (req, res) => {
+cartsRouter.delete('/:cid/product/:pid', async (req, res) => {
     let cartId = req.params.cid;
     let productId = req.params.pid;
     res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
 })
 
-cartsRouter.put('/api/carts/:cid', async (req, res) => {
+cartsRouter.put('/:cid', async (req, res) => {
     let products = req.body;
     let cartId = req.params.cid;
     res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, products));
 })
 
-cartsRouter.put('/api/carts/:cid/products/:pid', async (req, res) => {
+cartsRouter.put('/:cid/product/:pid', async (req, res) => {
     let cartId = req.params.cid;
     let productId = req.params.pid;
-    let quantity = req.body.quantity;
+    let quantity = req.body;
     res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, productId, quantity))
 })
 
-cartsRouter.delete('/api/carts/:cid', async (req, res) => {
+cartsRouter.delete('/:cid', async (req, res) => {
     let cartId = req.params.cid;
     res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
 })

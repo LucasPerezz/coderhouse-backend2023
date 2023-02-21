@@ -81,7 +81,7 @@ class ProductManager {
 }
 
 const validate = (product) => {
-    if(!product.title || !product.description || !product.price || !product.code || !product.thumbnail || !product.stock || !product.category) {
+    if(!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
         throw new Error("TODOS los campos son obligatorios!");
     } else {
         return 1;

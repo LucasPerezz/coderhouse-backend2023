@@ -1,7 +1,8 @@
 const express = require('express');
 const cartsManager = require('../manager/CartsManager');
 const productManager = require('./../manager/ProductManager');
-const messageManager = require('./../manager/MessageManager')
+const messageManager = require('./../manager/MessageManager');
+const cartModel = require('../models/cart.model');
 const router = express.Router();
 
 
@@ -85,18 +86,26 @@ router.get('/products', async (req, res) => {
         res.render('products', {products: products});
 })
 
+router.get('/products/:id', async (req, res) => {
+    let productId = req.params.id;
+
+    const product = await productManager.getProductById(productId);
+
+    res.render('productDetail', {product});
+})
+
 router.get('/carts/:cid', async (req, res) => {
     const cartId = req.params.cid;
 
-        const cartRes = await fetch(`http://localhost:8080/api/carts/${cartId}`);
-        let cart = await cartRes.json();
+        const cart = await cartsManager.getCartById(cartId)
+        console.log(cart.products);
+        
 
         cart.products.map(prod => {
             prod.totalPrice = (prod.product.price * prod.quantity).toFixed(2)
-            return prod
         })
 
-        console.log(cart)
+        
         res.render('cart', {cart: cart, cartId: cartId});
 })
 

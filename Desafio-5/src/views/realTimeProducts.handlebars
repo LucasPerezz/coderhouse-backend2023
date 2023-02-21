@@ -8,52 +8,52 @@
 
 </head>
 <body>
-    <div>
+    <div class="flex flex-col items-center justify-center w-full md:grid md:grid-cols-2 md:container md:place-items-center mx-auto min-h-full mt-12">
         <form action="api/products" method="post">
-            <h3 class="title">Producto A Agregar</h3>
+            <h3 class="text-2xl mb-2 font-bold text-center">Agrega tu producto</h3>
             <div>
                 <label for="title">{{title}}</label>
-                <input class="input" type="text" id="title" name="title" placeholder="Nombre del producto" required>
+                <input class="input w-full max-w-[400px] my-2 rounded-lg" type="text" id="title" name="title" placeholder="Nombre del producto" required>
             </div>
             <div>
                 <label for="price">{{price}}</label>
-                <input class="input" type="number" id="price" min=0 name="price" placeholder="Precio" required>
+                <input class="input w-full max-w-[400px] my-2 rounded-lg" type="number" id="price" min=0 name="price" placeholder="Precio" required>
             </div>
                 <div>
                 <label for="description">{{description}}</label>
-                <input type="text" id="description" name="description" placeholder="Descripcion" required>
+                <input class="w-full max-w-[400px] my-2 rounded-lg" type="text" id="description" name="description" placeholder="Descripcion" required>
             </div>
             <div>
                 <label for="code">{{code}}</label>
-                <input type="number" id="code" name="code" placeholder="Codigo" required>
+                <input class="w-full max-w-[400px] my-2 rounded-lg" type="number" id="code" name="code" placeholder="Codigo" required>
             </div>
             <div>
                 <label for="stock">{{stock}}</label>
-                <input type="number" id="stock" name="stock" placeholder="Stock" required>
+                <input class="w-full max-w-[400px] my-2 rounded-lg" type="number" id="stock" name="stock" placeholder="Stock" required>
             </div>
             <div>
                 <label for="category">{{category}}</label>
-                <input type="text" id="category" name="category" placeholder="Categoria" required>
+                <input class="w-full max-w-[400px] my-2 rounded-lg" type="text" id="category" name="category" placeholder="Categoria" required>
             </div>
             <div>
                 <label for="thumbnail">{{thumbnail}}</label>
-                <input type="FILE" id="thumbnail" name="thumbnail" required>
+                <input class="w-full max-w-[400px] my-2 rounded-lg" type="text" id="thumbnail" name="thumbnail" placeholder="Imagen URL" required>
             </div>
             <input type="hidden" name="form">
-            <button class="btn" id="submitButton" type="submit" value="Save product"> Agregar producto </button>
+            <button class="btn border py-2 px-4 bg-sky-400 rounded-md text-white my-2" id="submitButton" type="submit" value="Save product"> Agregar producto </button>
         </form>
-    </div>
+    
 
-    <div>
+    <div class="w-full">
         {{#each products}}
-     <div id="list_products">
-    <ul>
-        <li>{{this.title}}</li>
-        <li>{{this.price}}</li>
-        <li>{{this.description}}</li>
-        <li>{{this.thumbnail}}</li>
-        <li>{{this.code}}</li>
-        <li>{{this.stock}}</li>
+     <div id="list_products" class="flex justify-center lg:justify-start">
+        <hr>
+    <ul class="flex flex-col gap-1 my-3 ml-2 container">
+        <li><span class="font-bold">Producto: </span>{{this.title}}</li>
+        <li><span class="font-bold">Precio: </span>${{this.price}}</li>
+        <li><span class="font-bold">Descripcion: </span>{{this.description}}</li>
+        <li><span class="font-bold">Codigo: </span>{{this.code}}</li>
+        <li><span class="font-bold">Stock: </span>{{this.stock}}</li>
     </ul>
 </div>
     {{/each}}
