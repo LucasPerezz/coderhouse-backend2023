@@ -86,12 +86,12 @@ router.get('/products', async (req, res) => {
         res.render('products', {products: products});
 })
 
-router.get('/products/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     let productId = req.params.id;
 
     const product = await productManager.getProductById(productId);
-
-    res.render('productDetail', {product});
+    console.log(product)
+    res.render('productDetail', {product: product.toJSON()});
 })
 
 router.get('/carts/:cid', async (req, res) => {
@@ -100,13 +100,20 @@ router.get('/carts/:cid', async (req, res) => {
         const cart = await cartsManager.getCartById(cartId)
         console.log(cart.products);
         
+        let products = []
 
-        cart.products.map(prod => {
-            prod.totalPrice = (prod.product.price * prod.quantity).toFixed(2)
+        cart.products.forEach(prod => {
+            
+            products.push({
+                title: prod.product.title,
+                price: prod.product.price,
+                quantity: prod.quantity,
+                totalPrice: (prod.product.price * prod.quantity).toFixed(2)
+            })
         })
 
         
-        res.render('cart', {cart: cart, cartId: cartId});
+        res.render('cart', {cart: products, cartId: cartId});
 })
 
 router.get('/chat', async (req, res)=>{

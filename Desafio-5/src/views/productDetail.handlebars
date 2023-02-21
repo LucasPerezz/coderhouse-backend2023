@@ -1,20 +1,16 @@
-<div>
-    <div>
-        <div>
+    <div class="min-h-full w-full">
+      <div class="w-full container mx-auto flex flex-col lg:grid lg:grid-cols-2 my-auto items-center place-items-center min-h-full">
             <div>
                 <img src="{{product.thumbnail}}" alt="{{product.title}}">
             </div>
-            <div>
-                <h1>{{product.title}}</h1>
+            <div class="flex flex-col gap-10">
+                <h1 class="text-2xl font-bold text-center">{{product.title}}</h1>
                 <div>
-                    <p>{{product.description}}</p>
-                    <p>Precio: ${{product.price}}</p>
-                    <p>Stock: {{product.stock}}</p>
+                    <p class="text-xl text-start">${{product.price}}</p>
                 </div>
-                <div>
-                    <a href="/products/{{this._id}}">Add to cart</a>
+                <div class="mx-auto">
+                    <a href="/products/{{this._id}}" class="border bg-sky-400 py-2 px-4 rounded-lg mx-auto">Add to cart</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
