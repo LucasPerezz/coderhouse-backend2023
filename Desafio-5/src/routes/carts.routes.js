@@ -35,7 +35,7 @@ cartsRouter.delete('/:cid/product/:pid', async (req, res) => {
 cartsRouter.put('/:cid', async (req, res) => {
     let products = req.body;
     let cartId = req.params.cid;
-    res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, products));
+    res.json(await cartsManager.updatedProductsInCartSelected(cartId, products));
 })
 
 cartsRouter.put('/:cid/product/:pid', async (req, res) => {

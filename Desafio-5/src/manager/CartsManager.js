@@ -118,10 +118,7 @@ class CartsManager {
                 .updateMany({products: Nproducts})
                 return result;
             }
-            // let product = cart.products.find(prod => prod.product == productId);
-            // let productIndex = cart.products.indexOf(product);
-            // cart.products[productIndex].quantity = qty;
-            // await cartModel.updateOne({_id: cartId}, {products: cart.products})
+
         } catch (error) {
             throw new Error(error)
         }

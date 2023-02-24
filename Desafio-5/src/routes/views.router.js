@@ -86,12 +86,17 @@ router.get('/products', async (req, res) => {
         res.render('products', {products: products});
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/product/:id', async (req, res) => {
     let productId = req.params.id;
 
     const product = await productManager.getProductById(productId);
-    console.log(product)
-    res.render('productDetail', {product: product.toJSON()});
+    console.log(product.title)
+    const productInMemory = {
+        title: product.title,
+        price: product.price,
+        image: product.thumbnail
+    }
+    res.render('productDetail', {product: productInMemory});
 })
 
 router.get('/carts/:cid', async (req, res) => {
