@@ -32,38 +32,38 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter);
 
+const messageDB = MessageManager;
 const conectedUsers = [];
 
-io.on('connection', socket => {
-  console.log('Cliente conectado');
+io.on('connection', socket=>{
+    console.log("Cliente conectado.");
 
+    socket.on('new_message', async message=>{
+        await messageDB.addMessage(message);
 
-  socket.on('new_message', async msg => {
-    await MessageManager.addMessage(msg);
+        let messages = await messageDB.getMessages().lean();
+        console.log(messages);
+        
+        io.emit('messages_log', messages);
+    });
 
-    let messages = await MessageManager.getMessages().lean();
+    socket.on('new_user', async user=>{
+        let messages = await messageDB.getMessages().lean();
+        let validationObj = {
+            validation: true,
+            user,
+            messages
+        }
 
-    io.emit('messages_log', messages)
-  })
+        if(conectedUsers.includes(user)){
+            validationObj.validation = false;
+        }else{
+            conectedUsers.push(user);
+        }
 
-  socket.on('new_user', async user => {
-    let messages = await MessageManager.getMessages().lean();
-    let validationObj = {
-      validation: true,
-      user,
-      messages
-    }
-
-    if(conectedUsers.includes(user)) {
-      validationObj.validation = false
-    } else {
-      conectedUsers.push(user);
-    }
-
-    socket.emit('auth_user', validationObj);
-
-    if(validationObj.validation) socket.broadcast.emit('new_user_connected', user);
-  })
+        socket.emit('auth_user', validationObj);
+        if(validationObj.validation) socket.broadcast.emit('new_user_connected', user);
+    });
 })
 
 

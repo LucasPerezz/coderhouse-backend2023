@@ -1,16 +1,17 @@
 const mongoose = require('mongoose')
 const messagesModel = require('../models/message.model');
 
-class MessageManager {
-    constructor() {}
+class MessageManager{
 
-    async getMessages() {
-        const messages = await messagesModel.find();
-        return messages;
+    constructor(){}
+
+    getMessages(){
+        return messagesModel.find();
     }
 
-    async addMessage(message) {
-         await messagesModel.create(message);
+    async addMessage(messageToAdd){
+
+        return messagesModel.create(messageToAdd);
     }
 }
 

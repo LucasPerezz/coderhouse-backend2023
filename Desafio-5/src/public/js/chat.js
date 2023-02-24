@@ -1,6 +1,5 @@
 const chatBox = document.getElementById('chatBox');
 const messageInput = document.getElementById('messageInput');
-const messageBtn = document.getElementById('messageBtn');
 
 const socket = io();
 
@@ -8,6 +7,7 @@ let user;
 
 validationSwal();
 
+// Eventos
 messageInput.addEventListener('keypress', evt=>{
     if(evt.key === 'Enter'){
         if(evt.target.value.trim().length >0){
@@ -16,13 +16,9 @@ messageInput.addEventListener('keypress', evt=>{
         }
     }
 })
-messageBtn.addEventListener('click', evt=>{
-    if(e.target.value.trim().length >0){
-        socket.emit('new_message', {user, message:evt.target.value});
-        evt.target.value = '';
-    }
-})
 
+
+// Eventos de WebSocket
 socket.on('auth_user', auth_user=>{
     if(auth_user.validation){
         user = auth_user.user;
@@ -44,6 +40,7 @@ socket.on('new_user_connected', user=>{
 
 socket.on('messages_log', messages=>loadMessages(messages));
 
+// Funciones
 function validationSwal(error){
     Swal.fire({
         title: 'Identificación',
@@ -78,6 +75,7 @@ function loadMessages(messages){
         if(message.user === user) pTag.classList.add('text-start');
         else pTag.classList.add('text-end');
     });
+
 
     chatBox.innerHTML = messageContainer.innerHTML;
 }
