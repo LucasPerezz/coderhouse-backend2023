@@ -32,16 +32,16 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser("coderhouse"))
+app.use(cookieParser())
 app.use(session({
+  secret:'codersecret',
+  resave:true,
+  saveUninitialized:true,
   store: MongoStore.create({
-      mongoUrl:'mongodb+srv://fsautu:root@coderhouse.lomute3.mongodb.net/?retryWrites=true&w=majority',
+      mongoUrl:STRING_CONNECTION,
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
       ttl:15
   }),
-  secret:'codersecret',
-  resave:true,
-  saveUninitialized:true
 }))
 
 app.use((req, res, next)=>{     // Middleware para agregar a las variables locales del objeto Response los datos de sesión.
