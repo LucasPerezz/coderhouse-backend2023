@@ -33,6 +33,7 @@ router.get('/products', async (req, res) => {
         const page = req.query.page || 1;
         const query = req.query.query || '';
         const sort = req.query.sort || 1;
+        const user = req.query.user || '';
 
         const productsRes = await fetch(`http://localhost:8080/api/products?limit=${limit}&page=${page}&query=${query}&sort=${sort}`);
         const products = await productsRes.json();
@@ -84,7 +85,7 @@ router.get('/products', async (req, res) => {
         
         if(products.totalPages <= 1) products.pagination.active = false;
 
-        res.render('products', {products: products});
+        res.render('products', {products: products, user: user});
 })
 
 router.get('/product/:id', async (req, res) => {
@@ -128,44 +129,40 @@ router.get('/chat', async (req, res)=>{
     res.render('chat', {messages});
 })
 
-router.get('/signup', async (req, res) => {
+router.get('/sessions/signup', async (req, res) => {
     res.render('signUp', {title: 'sign up'})
 })
 
-router.get('/login', async (req, res) => {
+router.get('/sessions/login', async (req, res) => {
     res.render('login', {title: 'login'})
 })
 
-router.get('/profile/:id', async (req, res) => {
-    const id = req.params.id;
+router.get('/sessions/profile/:id', async (req, res) => {
+    let id = req.params.id;
 
-    const findProfile = await userModel.findOne({_id: id});
-    console.log(findProfile);
+    const findProfile = await userModel.findOne(id);
     const profile = {
         first_name: findProfile.first_name,
         last_name: findProfile.last_name,
-        admin: findProfile.admin,
-        cart: findProfile.cart
+        admin: findProfile.admin
     }
     res.render('profile', {user: profile});
 })
 
-function privateView(req, res, next){       // Middleware de validacion de rutas privadas.
-    if(!!!req.session.user) return res.redirect('/login?validation=1');
+router.get('/sessions/logout', async (req, res) => {
+    req.session.destroy(err => {
+        if(err) res.send({status:'error', message:'Error al cerrar la sesión: '+err});
 
-    next();
-}
-
-function publicView(req, res, next){       // Middleware de validacion de rutas publicas.
-    if(!!req.session.user) return res.redirect('/profile');
-
-    next();
-}
-
-
-
+        res.redirect('/login');
+    })
+})
 
 
 
 module.exports = router;
+
+
+
+
+
 

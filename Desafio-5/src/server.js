@@ -15,8 +15,7 @@ const io = new Server(server);
 const productsRouter = require('./routes/products.routes');
 const cartsRouter = require('./routes/carts.routes');
 const MessageManager = require('./manager/MessageManager');
-const loginRouter = require('./routes/login.routes');
-const signupRouter = require('./routes/signUp.routes')
+const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
 const mongoose = require('mongoose');
 
@@ -35,27 +34,25 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser("coderhouse"))
 app.use(session({
-  secret: "coderhouse",
-  resave: true,
-  saveUninitialized: true,
   store: MongoStore.create({
-    mongoUrl: STRING_CONNECTION,
-    mongoOptions: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-    ttl: 15
-  })
+      mongoUrl:'mongodb+srv://fsautu:root@coderhouse.lomute3.mongodb.net/?retryWrites=true&w=majority',
+      mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
+      ttl:15
+  }),
+  secret:'codersecret',
+  resave:true,
+  saveUninitialized:true
 }))
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/login', loginRouter);
-app.use('/signup', signupRouter);
-app.use('/', viewsRouter);
-app.use((req, res, next) => {
+
+app.use((req, res, next)=>{     // Middleware para agregar a las variables locales del objeto Response los datos de sesión.
   res.locals.session = req.session;
   next();
 })
+
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
+app.use('/sessions', sessionsRouter);
+app.use('/', viewsRouter);
 
 const messageDB = MessageManager;
 const conectedUsers = [];

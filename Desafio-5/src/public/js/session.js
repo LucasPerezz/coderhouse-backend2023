@@ -3,7 +3,7 @@ const elementExits = (id) => document.getElementById(id) !== null;
 elementExits("login") && document.getElementById("login").addEventListener("click", (e) => {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    fetch("http://localhost:8080/login/", {
+    fetch("http://localhost:8080/sessions/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -16,8 +16,8 @@ elementExits("login") && document.getElementById("login").addEventListener("clic
     .then(res => res.json())
     .then(data => {
         console.log(data);
-        if(data === "success") {
-            window.location.href = "http://localhost:8080/products/";
+        if(data.msg === "success") {
+            window.location.href = `http://localhost:8080/products?user=${data._id}`;
         } else {
             alert("Usuario no encontrado")
         }
@@ -36,7 +36,7 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
     if(!first_name || !last_name || !email || !password || !age) {
         alert("Todos los campos son obligatorios")
     } else {
-        fetch("https://localhost:8080/signup/", {
+        fetch("http://localhost:8080/sessions/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -52,10 +52,11 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
         .then(res => res.json())
         .then(data => {
             if(data.msg === "success") {
-                window.location.href = "https://localhost:8080/login/"
+                window.location.href = "http://localhost:8080/sessions/login"
             }
         })
         .catch(err => console.log(err)) 
 
     }
 })
+

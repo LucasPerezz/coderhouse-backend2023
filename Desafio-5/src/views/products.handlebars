@@ -1,6 +1,7 @@
 <div class="min-h-full w-full container mx-auto mt-8">
     <div>
         <h1 class="text-3xl text-center font-bold">Lista de productos</h1>
+        <h3>Bienvenido: {{user}}</h3>
         <div class="w-full grid grid-cols-1 lg:flex lg:flex-row gap-4 lg:gap-7 lg:gap-10 mx-auto justify-center items-center">
             {{#each products.payload}}
                 <div class="w-full max-w-[320px] bg-gray-100 h-[400px] mx-auto">
