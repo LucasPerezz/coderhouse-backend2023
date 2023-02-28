@@ -2,7 +2,6 @@ const express = require('express');
 const cartsManager = require('../manager/CartsManager');
 const productManager = require('./../manager/ProductManager');
 const messageManager = require('./../manager/MessageManager');
-const cartModel = require('../models/cart.model');
 const userModel = require('../models/users.model');
 const router = express.Router();
 
@@ -85,7 +84,14 @@ router.get('/products', async (req, res) => {
         
         if(products.totalPages <= 1) products.pagination.active = false;
 
-        res.render('products', {products: products, user: user});
+        const findUser = await userModel.findById(user);
+        const userFound = {
+            first_name: findUser.first_name,
+            last_name: findUser.last_name
+        }
+
+
+        res.render('products', {products: products, user: userFound});
 })
 
 router.get('/product/:id', async (req, res) => {
@@ -137,23 +143,23 @@ router.get('/sessions/login', async (req, res) => {
     res.render('login', {title: 'login'})
 })
 
-router.get('/sessions/profile/:id', async (req, res) => {
-    let id = req.params.id;
+// router.get('/sessions/profile/:id', async (req, res) => {
+//     let id = req.params.id;
 
-    const findProfile = await userModel.findOne(id);
-    const profile = {
-        first_name: findProfile.first_name,
-        last_name: findProfile.last_name,
-        admin: findProfile.admin
-    }
-    res.render('profile', {user: profile});
-})
+//     const findProfile = await userModel.findOne(id);
+//     const profile = {
+//         first_name: findProfile.first_name,
+//         last_name: findProfile.last_name,
+//         admin: findProfile.admin
+//     }
+//     res.render('profile', {user: profile});
+// })
 
 router.get('/sessions/logout', async (req, res) => {
     req.session.destroy(err => {
         if(err) res.send({status:'error', message:'Error al cerrar la sesión: '+err});
 
-        res.redirect('/login');
+        res.redirect('/sessions/login');
     })
 })
 
