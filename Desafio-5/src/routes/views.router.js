@@ -3,6 +3,7 @@ const cartsManager = require('../manager/CartsManager');
 const productManager = require('./../manager/ProductManager');
 const messageManager = require('./../manager/MessageManager');
 const cartModel = require('../models/cart.model');
+const userModel = require('../models/users.model');
 const router = express.Router();
 
 
@@ -126,6 +127,44 @@ router.get('/chat', async (req, res)=>{
 
     res.render('chat', {messages});
 })
+
+router.get('/signup', async (req, res) => {
+    res.render('signUp', {title: 'sign up'})
+})
+
+router.get('/login', async (req, res) => {
+    res.render('login', {title: 'login'})
+})
+
+router.get('/profile/:id', async (req, res) => {
+    const id = req.params.id;
+
+    const findProfile = await userModel.findOne({_id: id});
+    console.log(findProfile);
+    const profile = {
+        first_name: findProfile.first_name,
+        last_name: findProfile.last_name,
+        admin: findProfile.admin,
+        cart: findProfile.cart
+    }
+    res.render('profile', {user: profile});
+})
+
+function privateView(req, res, next){       // Middleware de validacion de rutas privadas.
+    if(!!!req.session.user) return res.redirect('/login?validation=1');
+
+    next();
+}
+
+function publicView(req, res, next){       // Middleware de validacion de rutas publicas.
+    if(!!req.session.user) return res.redirect('/profile');
+
+    next();
+}
+
+
+
+
 
 
 module.exports = router;

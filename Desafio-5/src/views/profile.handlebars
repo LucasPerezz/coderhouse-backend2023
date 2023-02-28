@@ -1,0 +1,12 @@
+<div>
+    <div>
+        {{#if user}}
+        <h1>Bienvenido {{user.first_name}}</h1>
+        <h5>Nombre completo: {{user.last_name}} {{user.first_name}}</h5>
+        <h5>Rol: {{user.admin}}</h5>
+        <h5>ID de carrito: {{user.cart}}</h5>
+        {{/if}}
+    </div>
+
+    <button><a href="https:localhost:8080/login/">Logout</a></button>
+</div>

@@ -3,6 +3,9 @@ const handlebars = require('express-handlebars');
 const http = require('http');
 const { Server } = require('socket.io');
 const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
 
 const app = express();
 const server = http.createServer(app)
@@ -12,6 +15,8 @@ const io = new Server(server);
 const productsRouter = require('./routes/products.routes');
 const cartsRouter = require('./routes/carts.routes');
 const MessageManager = require('./manager/MessageManager');
+const loginRouter = require('./routes/login.routes');
+const signupRouter = require('./routes/signUp.routes')
 const viewsRouter = require('./routes/views.router');
 const mongoose = require('mongoose');
 
@@ -28,9 +33,29 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser("coderhouse"))
+app.use(session({
+  secret: "coderhouse",
+  resave: true,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: STRING_CONNECTION,
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+    ttl: 15
+  })
+}))
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
 app.use('/', viewsRouter);
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+})
 
 const messageDB = MessageManager;
 const conectedUsers = [];
