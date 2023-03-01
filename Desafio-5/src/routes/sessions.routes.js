@@ -9,14 +9,17 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const response = await userModel.findOne({
-            email: email,
-            password: password
-        });
-        req.session.email = email
-        req.session.password = password
-        if(response) res.json({msg: "success", _id: response._id})
-        else res.status(400).json({message: "User not found"})
+            const response = await userModel.findOne({
+                email: email,
+                password: password,
+            });
+
+            const {first_name, last_name, age} = response;
+            const user = {first_name, last_name, age, email};
+            req.session.user = user; 
+
+            if(response) res.json({msg: "success", data: user})
+            else res.status(400).json({message: "User not found"})
     } catch (error) {
         console.log(error);
     }

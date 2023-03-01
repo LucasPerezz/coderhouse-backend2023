@@ -17,7 +17,7 @@ elementExits("login") && document.getElementById("login").addEventListener("clic
     .then(data => {
         console.log(data);
         if(data.msg === "success") {
-            window.location.href = `http://localhost:8080/products?user=${data._id}`;
+            window.location.href = `http://localhost:8080/products/`;
         } else {
             alert("Usuario no encontrado")
         }

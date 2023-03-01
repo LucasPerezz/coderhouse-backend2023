@@ -27,17 +27,14 @@ router.get('/realtimeproducts', async (req, res) => {
     res.render('realTimeProducts', {products:products.payload});
 })
 
-router.get('/products', async (req, res) => {
+router.get('/products', auth, async (req, res) => {
     const limit = req.query.limit || 10;
         const page = req.query.page || 1;
         const query = req.query.query || '';
         const sort = req.query.sort || 1;
-        const user = req.query.user || '';
 
         const productsRes = await fetch(`http://localhost:8080/api/products?limit=${limit}&page=${page}&query=${query}&sort=${sort}`);
         const products = await productsRes.json();
-
-        console.log(products)
 
         products.pagination = {
             active: true,
@@ -84,14 +81,14 @@ router.get('/products', async (req, res) => {
         
         if(products.totalPages <= 1) products.pagination.active = false;
 
-        const findUser = await userModel.findById(user);
-        const userFound = {
-            first_name: findUser.first_name,
-            last_name: findUser.last_name
-        }
+        // const findUser = await userModel.findById(user);
+        // const userFound = {
+        //     first_name: findUser.first_name,
+        //     last_name: findUser.last_name
+        // }
 
 
-        res.render('products', {products: products, user: userFound});
+        res.render('products', {products: products, user: req.session.user});
 })
 
 router.get('/product/:id', async (req, res) => {
@@ -143,17 +140,6 @@ router.get('/sessions/login', async (req, res) => {
     res.render('login', {title: 'login'})
 })
 
-// router.get('/sessions/profile/:id', async (req, res) => {
-//     let id = req.params.id;
-
-//     const findProfile = await userModel.findOne(id);
-//     const profile = {
-//         first_name: findProfile.first_name,
-//         last_name: findProfile.last_name,
-//         admin: findProfile.admin
-//     }
-//     res.render('profile', {user: profile});
-// })
 
 router.get('/sessions/logout', async (req, res) => {
     req.session.destroy(err => {
@@ -162,6 +148,13 @@ router.get('/sessions/logout', async (req, res) => {
         res.redirect('/sessions/login');
     })
 })
+
+function auth(req, res, next) {
+    if(req.session.user) {
+        return next();
+    }
+    res.redirect('/sessions/login')
+}
 
 
 

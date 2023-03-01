@@ -32,15 +32,17 @@ app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser())
 app.use(session({
   secret:'codersecret',
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  },
   resave:true,
   saveUninitialized:true,
   store: MongoStore.create({
       mongoUrl:STRING_CONNECTION,
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
-      ttl:15
+      ttl:30
   }),
 }))
 
