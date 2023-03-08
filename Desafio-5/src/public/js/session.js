@@ -19,7 +19,7 @@ elementExits("login") && document.getElementById("login").addEventListener("clic
         if(data.msg === "success") {
             window.location.href = `http://localhost:8080/products/`;
         } else {
-            alert("Usuario no encontrado")
+            window.location.href = "http://localhost:8080/sessions/faillogin"
         }
     })
     .catch(err => console.log(err))
@@ -53,6 +53,8 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
         .then(data => {
             if(data.msg === "success") {
                 window.location.href = "http://localhost:8080/sessions/login"
+            } else {
+                window.location.href = "http://localhost:8080/sessions/failsignup"
             }
         })
         .catch(err => console.log(err)) 
