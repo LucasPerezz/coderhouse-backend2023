@@ -7,5 +7,7 @@ module.exports = {
     github_AppId: process.env.GITHUB_APP_ID,
     github_ClientId: process.env.GITHUB_CLIENT_ID,
     github_ClientSecret: process.env.GITHUB_CLIENT_SECRET,
-    github_CallbackURL: process.env.GITHUB_CALLBACK_URL
+    github_CallbackURL: process.env.GITHUB_CALLBACK_URL,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD
 }

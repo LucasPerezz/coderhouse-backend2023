@@ -3,11 +3,12 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const http = require('http');
 const { Server } = require('socket.io');
-const dotenv = require('dotenv')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const passport = require('passport');
 const initializePassport = require('./config/passport-config');
+const mongoose = require('mongoose');
+const config = require('./config/config')
 
 //Servidor instanciado
 const app = express();
@@ -20,12 +21,9 @@ const cartsRouter = require('./routes/carts.routes');
 const MessageManager = require('./manager/MessageManager');
 const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
-const mongoose = require('mongoose');
 
 
 const port = 8080;
-dotenv.config();
-const STRING_CONNECTION = `mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority`
 
 //Middlewares
 app.engine("handlebars", handlebars.engine());
@@ -42,7 +40,7 @@ app.use(session({
   resave:true,
   saveUninitialized:true,
   store: MongoStore.create({
-      mongoUrl:STRING_CONNECTION,
+      mongoUrl: config.mongoUrl,
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
       ttl:30
   }),
@@ -100,7 +98,7 @@ io.on('connection', socket=>{
 })
 
 
-server.listen(port, () => {
+server.listen(config.port, () => {
   console.log("Listening on 8080")
 });
 
