@@ -34,8 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(session({
   secret:'codersecret',
-  resave:true,
-  saveUninitialized:true,
+  resave:false,
+  saveUninitialized:false,
   store: MongoStore.create({
       mongoUrl: "mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority",
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},

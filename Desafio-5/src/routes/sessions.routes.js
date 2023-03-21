@@ -57,9 +57,10 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
     res.redirect('/');
 })
 
-// router.get('/current', passport.authenticate('jtw', {session: false}), (req, res) => {
-//     res.send({status:'success', payload:req.user});
-// })
+router.get('/current', (req, res) => {
+    console.log(req.session.user);
+    res.status(200).send({user: req.session.user});
+})
 
 module.exports = router;
 
