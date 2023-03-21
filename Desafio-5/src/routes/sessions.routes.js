@@ -8,25 +8,31 @@ const passport = require('passport');
 const router = express.Router();
 
 router.post('/login', passport.authenticate('login', {failureRedirect: 'faillogin'}),async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-            const response = await userModel.findOne({
-                email: email
-            });
-
-
-            if(!response) return res.status(400).send({message: "User not found"});
-            if(!isValidPassword(response, password)) return res.status(403).send({message: "Incorrect password"});
-            delete response.password;
-            const {first_name, last_name, age} = response;
-            const user = {first_name, last_name, age, email};
-            req.session.user = user; 
-            res.json({msg: "success", data: user});
-
-    } catch (error) {
-        console.log(error);
+    if(!req.user) {
+        return res.status(400).send({status: "Error", error: "Usuario no encontrado"});
     }
+
+    const userFound = await userModel.findOne({email: req.body.email})
+    console.log(userFound);
+
+    req.session.user = {
+        first_name: userFound.first_name,
+        last_name: userFound.last_name,
+        email: userFound.email,
+        age: userFound.age,
+    }
+
+    req.session.admin = true;
+
+    const access_token = generateToken({
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
+        age: req.user.age
+    });
+
+    return res.send({msg: "success", access_token});
+
 })
 
 router.get('/faillogin', async (req, res) => {
@@ -34,39 +40,9 @@ router.get('/faillogin', async (req, res) => {
 })
 
 router.post('/signup', passport.authenticate("signup", {failureRedirect: '/failsignup'}), async (req, res) => {
-    const {first_name, last_name, email, password, age} = req.body;
+    const access_token = generateToken(req.body);
 
-    try {
-        const confirmAdmin = (email) => {
-            if(email === "adminCoder@coder.com" && password === "adminCod3r123") {
-                return "admin";
-            } else {
-                return "user";
-            }
-        }
-        const user = {
-            first_name,
-            email,
-            last_name,
-            password,
-            age
-        }
-
-        await userModel.create({
-            first_name,
-            last_name,
-            age,
-            email,
-            password: createHash(password),
-            admin: confirmAdmin(email),
-            //cart
-        });
-
-        const access_token = generateToken(user)
-        res.json({msg: "success", access_token})
-    } catch (error) {
-        console.log(error);
-    }
+    res.send({msg: "success", access_token});
 })
 
 router.get('/failsignup', async (req, res) => {
@@ -81,9 +57,9 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect: 
     res.redirect('/');
 })
 
-router.get('/current', authToken, (req, res) => {
-    res.send({status: "success", payload: req.user});
-})
+// router.get('/current', passport.authenticate('jtw', {session: false}), (req, res) => {
+//     res.send({status:'success', payload:req.user});
+// })
 
 module.exports = router;
 

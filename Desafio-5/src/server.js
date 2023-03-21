@@ -34,13 +34,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(session({
   secret:'codersecret',
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7
-  },
   resave:true,
   saveUninitialized:true,
   store: MongoStore.create({
-      mongoUrl: config.mongoUrl,
+      mongoUrl: "mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority",
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
       ttl:30
   }),
@@ -98,13 +95,13 @@ io.on('connection', socket=>{
 })
 
 
-server.listen(config.port, () => {
+server.listen(port, () => {
   console.log("Listening on 8080")
 });
 
 
 //MongoDB
-mongoose.connect(STRING_CONNECTION, (err) => {
+mongoose.connect("mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority", (err) => {
   if(err) {
     console.log("Cannot conect to database: " + err)
     process.exit()

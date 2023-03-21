@@ -36,18 +36,13 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
     if(!first_name || !last_name || !email || !password || !age) {
         alert("Todos los campos son obligatorios")
     } else {
+        const data = {first_name, last_name, email, password, age}
         fetch("http://localhost:8080/sessions/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                first_name,
-                last_name,
-                email,
-                password,
-                age
-            })
+            body: JSON.stringify(data)
         })
         .then(res => res.json())
         .then(data => {
