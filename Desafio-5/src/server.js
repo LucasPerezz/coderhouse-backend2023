@@ -8,6 +8,7 @@ const MongoStore = require('connect-mongo')
 const passport = require('passport');
 const initializePassport = require('./config/passport-config');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const config = require('./config/config')
 
 //Servidor instanciado
@@ -42,6 +43,7 @@ app.use(session({
       ttl:30
   }),
 }));
+app.use(cors());
 
 initializePassport();
 app.use(passport.initialize());
