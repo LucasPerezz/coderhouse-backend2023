@@ -9,7 +9,9 @@ const passport = require('passport');
 const initializePassport = require('./config/passport-config');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const config = require('./config/config')
+require('dotenv').config();
+
+
 
 //Servidor instanciado
 const app = express();
@@ -19,12 +21,14 @@ const io = new Server(server);
 //Instancia de rutas
 const productsRouter = require('./routes/products.routes');
 const cartsRouter = require('./routes/carts.routes');
-const MessageManager = require('./manager/MessageManager');
+const MessageManager = require('./dao/MessageManager');
 const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
 
 
-const port = 8080;
+const port = process.env.PORT | 8080;
+//Tira undefined
+console.log(process.env.PORT);
 
 //Middlewares
 app.engine("handlebars", handlebars.engine());

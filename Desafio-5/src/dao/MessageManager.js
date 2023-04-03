@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const messagesModel = require('../models/message.model');
+const messagesModel = require('./models/message.model');
 
 class MessageManager{
 

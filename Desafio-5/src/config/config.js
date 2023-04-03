@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
-dotenv.config();
+const { resolve } = require('path');
+dotenv.config({path: resolve(__dirname, "./.dotenv")});
 
 module.exports = {
     port: process.env.PORT,
@@ -9,5 +10,6 @@ module.exports = {
     github_ClientSecret: process.env.GITHUB_CLIENT_SECRET,
     github_CallbackURL: process.env.GITHUB_CALLBACK_URL,
     username: process.env.USERNAME,
-    password: process.env.PASSWORD
+    password: process.env.PASSWORD,
+    private_key: process.env.PRIVATE_KEY
 }

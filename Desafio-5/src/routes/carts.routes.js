@@ -1,54 +1,23 @@
 const express = require('express');
-const cartsManager = require('../manager/CartsManager')
+const {addCart, getCarts, getCartById, addProductInCart, deleteProductInCart, updateProductInCart, updateStockOfProduct, deleteAllProductsInCart } = require('../controllers/carts.controller')
 
 const cartsRouter = express.Router();
 
-cartsRouter.post('/', async (req, res) => {
-    let product = req.body;
-    res.json(await cartsManager.addCart(product));
-})
+cartsRouter.post('/', addCart)
 
-cartsRouter.get('/', async (req, res) => {
-    res.json(await cartsManager.getAllCarts());
-})
+cartsRouter.get('/', getCarts)
 
+cartsRouter.get('/:cid', getCartById)
 
-cartsRouter.get('/:cid', async (req, res) => {
-    let id = req.params.cid;
-    res.json(await cartsManager.getCartById(id));
-})
+cartsRouter.post('/:cid/product/:pid', addProductInCart)
 
-cartsRouter.post('/:cid/product/:pid', async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
+cartsRouter.delete('/:cid/product/:pid', deleteProductInCart)
 
-    const cartList = await cartsManager.addProductInCartSelected(cartId, productId)
-    res.json(cartList);
-})
+cartsRouter.put('/:cid', updateProductInCart)
 
-cartsRouter.delete('/:cid/product/:pid', async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
-    res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
-})
+cartsRouter.put('/:cid/product/:pid', updateStockOfProduct)
 
-cartsRouter.put('/:cid', async (req, res) => {
-    let products = req.body;
-    let cartId = req.params.cid;
-    res.json(await cartsManager.updatedProductsInCartSelected(cartId, products));
-})
-
-cartsRouter.put('/:cid/product/:pid', async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
-    let quantity = req.body;
-    res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, productId, quantity))
-})
-
-cartsRouter.delete('/:cid', async (req, res) => {
-    let cartId = req.params.cid;
-    res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
-})
+cartsRouter.delete('/:cid', deleteAllProductsInCart)
 
 
 

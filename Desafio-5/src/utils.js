@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jtw = require('jsonwebtoken');
+const config = require('./config/config');
 
 const PRIVATE_KEY = "coderhouse";
 
