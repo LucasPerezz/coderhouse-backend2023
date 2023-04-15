@@ -14,15 +14,15 @@ class CartsManager {
     }
 
     //Funciona
-    async addCart(product) {
+    async addCart() {
         try {
-            if(!Array.isArray(product)) {
-                return "it is not array";
-            }
+            // if(!Array.isArray(product)) {
+            //     return "it is not array";
+            // }
             
-            console.log(await cartsManager.getAllCarts())
+            // console.log(await cartsManager.getAllCarts())
 
-            await cartModel.create({products: product, quantity: 1})
+            await cartModel.create({products: [], quantity: 1})
 
             return {message: "Cart Created"}
         } catch (error) {
@@ -31,10 +31,9 @@ class CartsManager {
     }
 
     //Funciona
-    async getCartById(id) {
+    async getCartById(id, populate = false) {
         try {
-            let cart = await cartModel.findById(id);
-            console.log(cart);
+            let cart = (populate) ? await cartModel.findOne({_id: id}).populate('products.product').lean() : await cartModel.findOne({_id: id});
             if(!cart) throw new Error("Cart not found")
             else {
                 return cart;

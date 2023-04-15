@@ -1,5 +1,6 @@
 const express = require('express');
-const {getProductById, getProducts, postProduct, updateProduct, deleteProduct} = require('./../controllers/products.controllers')
+const {getProductById, getProducts, postProduct, updateProduct, deleteProduct} = require('./../controllers/products.controllers');
+const { handlePolicies } = require('../utils');
 const productsRouter = express.Router();
 
 
@@ -7,11 +8,11 @@ productsRouter.get('/', getProducts)
 
 productsRouter.get('/:id', getProductById)
 
-productsRouter.post('/', postProduct)
+productsRouter.post('/', handlePolicies(['ADMIN']), postProduct)
 
-productsRouter.put('/:id', updateProduct)
+productsRouter.put('/:id', handlePolicies(['ADMIN']), updateProduct)
 
-productsRouter.delete("/:id", deleteProduct)
+productsRouter.delete("/:id", handlePolicies(['ADMIN']), deleteProduct)
 
 module.exports = productsRouter
 

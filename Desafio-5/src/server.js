@@ -27,8 +27,6 @@ const viewsRouter = require('./routes/views.router');
 
 
 const port = process.env.PORT | 8080;
-//Tira undefined
-console.log(process.env.PORT);
 
 //Middlewares
 app.engine("handlebars", handlebars.engine());

@@ -4,6 +4,8 @@ const userService = require('../dao/models/users.model');
 const { createHash, isValidPassword } = require('./../utils');
 const GithubStrategy = require('passport-github2');
 const config = require('./config');
+const { default: mongoose } = require('mongoose');
+const cartModel = require('../dao/models/cart.model');
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
@@ -17,13 +19,17 @@ const initializePassport = () => {
             console.log(profile);
             let user = await userService.findOne({email: profile._json.email});
             if(!user) {
+                let createCart = await cartModel.create({})
                 let newUser = {
                     first_name: profile._json.name ? profile._json.name : "",
                     last_name: '',
                     age: null,
                     email: profile._json.email,
-                    password: ''
+                    password: '',
+                    carts: createCart["_id"]
+
                 }
+
             let result = await userService.create(newUser);
             done(null, result);
             } else {
@@ -44,14 +50,17 @@ const initializePassport = () => {
                     console.log("User already exits");
                     return done(null, false);
                 } else {
+                    let createCart = await cartModel.create({})
                     const newUser = {
                         first_name,
                         last_name,
                         email,
                         age,
-                        password: createHash(password)
+                        password: createHash(password),
+                        carts: createCart["_id"],
                     }
                     let result = await userService.create(newUser);
+                    console.log("registrer " + newUser);
                     return done(null, result);
                 }
             } catch (error) {

@@ -46,6 +46,19 @@ const deleteAllProductsInCart = async (req, res) => {
     res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
 }
 
+const purchase = async (req, res) => {
+    let cartId = req.params.cid;
+    let cart = await getCartById(cartId, true);
+    let total = 0;
+    let itemsOutStock = [];
+
+    cart.products.forEach(async (prod) => {
+        if(prod.product.stock > 0 || prod.product.stock >= prod.qty) {
+            
+        }
+    })
+}
+
 module.exports = {
     addCart,
     getCarts,
