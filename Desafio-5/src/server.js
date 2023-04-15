@@ -9,6 +9,8 @@ const passport = require('passport');
 const initializePassport = require('./config/passport-config');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
+const twilio = require('twilio');
 require('dotenv').config();
 
 
@@ -24,9 +26,38 @@ const cartsRouter = require('./routes/carts.routes');
 const MessageManager = require('./dao/MessageManager');
 const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
+const compression = require('express-compression');
 
 
 const port = process.env.PORT | 8080;
+
+/**************************** MAILING & TWILIO ***********************/
+
+// //Mailing. User y Pass convertir en variable de entorno
+// const transport = nodemailer.createTransport({
+//   service: 'gmail',
+//   port: 587,
+//   auth: {
+//     user: 'Mi correo',
+//     pass: "Mi contrasena"
+//   }
+// })
+
+// //Convertirlas en variables de entorno
+// const TWILIO_ACCOUNT_SID = "";
+// const TWILIO_AUTH_TOKEN = "";
+// const TWILIO_SMS_NUMBER = "";
+
+// const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SMS_NUMBER);
+
+// app.get('/sms', async (req, res) => {
+//   let result = await client.messages.create({
+//     body: "Mensaje",
+//     from: TWILIO_SMS_NUMBER,
+//     to: 'Numero de prueba'
+//   })
+// })
+
 
 //Middlewares
 app.engine("handlebars", handlebars.engine());
@@ -46,6 +77,9 @@ app.use(session({
   }),
 }));
 app.use(cors());
+app.use(compression({
+  brotli: {enable: true, zlib:{}}
+}));
 
 initializePassport();
 app.use(passport.initialize());
