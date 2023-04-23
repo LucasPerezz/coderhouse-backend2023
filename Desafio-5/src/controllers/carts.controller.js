@@ -1,63 +1,91 @@
 const cartsManager = require('../dao/CartsManager')
 
-const addCart = async (req, res) => {
-    let product = req.body;
-    res.json(await cartsManager.addCart(product));
+const addCart = async (req, res, next) => {
+    try {
+        let product = req.body;
+        res.json(await cartsManager.addCart(product));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const getCarts = async (req, res) => {
-    res.json(await cartsManager.getAllCarts());
+const getCarts = async (req, res, next) => {
+    try {
+        res.json(await cartsManager.getAllCarts());
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const getCartById = async (req, res) => {
-    let id = req.params.cid;
-    res.json(await cartsManager.getCartById(id));
+const getCartById = async (req, res, next) => {
+    try {
+        let id = req.params.cid;
+        res.json(await cartsManager.getCartById(id));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const addProductInCart = async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
+const addProductInCart = async (req, res, next) => {
+    try {
+        let cartId = req.params.cid;
+        let productId = req.params.pid;
+    
+        const cartList = await cartsManager.addProductInCartSelected(cartId, productId)
+        res.json(cartList);
+    } catch (error) {
+        next(error);
+    }
 
-    const cartList = await cartsManager.addProductInCartSelected(cartId, productId)
-    res.json(cartList);
 }
 
-const deleteProductInCart = async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
-    res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
+const deleteProductInCart = async (req, res, next) => {
+    try {
+        let cartId = req.params.cid;
+        let productId = req.params.pid;
+        res.json(await cartsManager.deleteProductInCartSelected(cartId, productId));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const updateProductInCart = async (req, res) => {
-    let products = req.body;
-    let cartId = req.params.cid;
-    res.json(await cartsManager.updatedProductsInCartSelected(cartId, products));
+const updateProductInCart = async (req, res, next) => {
+    try {
+        let products = req.body;
+        let cartId = req.params.cid;
+        res.json(await cartsManager.updatedProductsInCartSelected(cartId, products));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const updateStockOfProduct = async (req, res) => {
-    let cartId = req.params.cid;
-    let productId = req.params.pid;
-    let quantity = req.body;
-    res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, productId, quantity))
+const updateStockOfProduct = async (req, res, next) => {
+    try {
+        let cartId = req.params.cid;
+        let productId = req.params.pid;
+        let quantity = req.body;
+        res.json(await cartsManager.updateStockOfProductInCartSelected(cartId, productId, quantity))
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const deleteAllProductsInCart = async (req, res) => {
-    let cartId = req.params.cid;
-    res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
+const deleteAllProductsInCart = async (req, res, next) => {
+    try {
+        let cartId = req.params.cid;
+        res.json(await cartsManager.delelteAllProductsInTheCart(cartId));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const purchase = async (req, res) => {
-    let cartId = req.params.cid;
-    let cart = await getCartById(cartId, true);
-    let total = 0;
-    let itemsOutStock = [];
-
-    cart.products.forEach(async (prod) => {
-        if(prod.product.stock > 0 || prod.product.stock >= prod.qty) {
-            
-        }
-    })
-}
 
 module.exports = {
     addCart,

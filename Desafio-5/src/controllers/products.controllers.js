@@ -1,8 +1,9 @@
 const ProductManager = require('./../dao/ProductManager');
 
 
-const getProducts = async (req, res) => {
-    const limit = req.query.limit || 10;
+const getProducts = async (req, res, next) => {
+    try {
+        const limit = req.query.limit || 10;
     const page = req.query.page || 1;
     const query = (req.query.query) ? JSON.parse(req.query.query) : {};
     const sort = req.query.sort;
@@ -34,27 +35,51 @@ const getProducts = async (req, res) => {
             nextLink: products.nextLink && `localhost:8080/api/products?limit=${limit}&page=${products.nextPage}&sort=${sort}&query=${query}`
         })
     }
+    } catch (error) {
+        next(error);
+    }
+    
 }
 
-const getProductById = async (req, res) => {
-    const params = req.params.id;
-    res.json(await ProductManager.getProductById(params));
+const getProductById = async (req, res, next) => {
+    try {
+        const params = req.params.id;
+        res.json(await ProductManager.getProductById(params));
+    } catch (error) {
+        next(error);
+    }
+
 }
 
-const postProduct = async (req, res) => {
-    let product = req.body;
-    res.json(await ProductManager.addProduct(product));
+const postProduct = async (req, res, next) => {
+    try {
+        let product = req.body;
+        res.json(await ProductManager.addProduct(product));
+    } catch (error) {
+        next(error)
+    }
+
 }
 
-const updateProduct = async (req, res) => {
-    let id = req.params.id;
-    let product = req.body;
-    res.json(await ProductManager.updateProduct(id, product));
+const updateProduct = async (req, res, next) => {
+    try {
+        let id = req.params.id;
+        let product = req.body;
+        res.json(await ProductManager.updateProduct(id, product));
+    } catch (error) {
+        next(error);
+    }
+    
 }
 
-const deleteProduct = async (req, res) => {
-    let id = req.params.id;
-    res.json(await ProductManager.deleteProduct(id));
+const deleteProduct = async (req, res, next) => {
+    try {
+        let id = req.params.id;
+        res.json(await ProductManager.deleteProduct(id));
+    } catch (error) {
+        next(error);
+    }
+    
 }
 
 module.exports = {

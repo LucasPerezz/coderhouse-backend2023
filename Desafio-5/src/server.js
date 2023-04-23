@@ -12,6 +12,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
 require('dotenv').config();
+const errorHandler = require('./services/errorHandler.middleware');
 
 
 
@@ -95,6 +96,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/', viewsRouter);
+app.use(errorHandler);
 
 
 //Chat
