@@ -1,3 +1,5 @@
+const EErrors = require('../services/enums');
+const { cartNotFound } = require('../services/info');
 const cartModel = require('./models/cart.model');
 const productManager = require('./ProductManager');
 
@@ -16,14 +18,7 @@ class CartsManager {
     //Funciona
     async addCart() {
         try {
-            // if(!Array.isArray(product)) {
-            //     return "it is not array";
-            // }
-            
-            // console.log(await cartsManager.getAllCarts())
-
             await cartModel.create({products: [], quantity: 1})
-
             return {message: "Cart Created"}
         } catch (error) {
             console.log(error)
@@ -34,7 +29,14 @@ class CartsManager {
     async getCartById(id, populate = false) {
         try {
             let cart = (populate) ? await cartModel.findOne({_id: id}).populate('products.product').lean() : await cartModel.findOne({_id: id});
-            if(!cart) throw new Error("Cart not found")
+            if(!cart) {
+                CustomError.createError({
+                    name: "No existe el carrito",
+                    cause: cartNotFound(id),
+                    message: `No existe carrito con el ID: ${id}`,
+                    code: EErrors.CARTS.CART_NOT_FOUND
+                })
+            }
             else {
                 return cart;
             }
@@ -67,18 +69,23 @@ class CartsManager {
 
     //funciona
     async deleteProductInCartSelected(cartId, productId) {
-        try {
             const cartSelected = await cartsManager.getCartById(cartId);
             const productExits = cartSelected.products.find(prod => prod.product._id == productId);
-            if(!!!productExits) throw new Error("No existe el producto")
-            const productIndex = cartSelected.products.indexOf(productExits);
-            console.log(productIndex)
-            cartSelected.products.splice(productIndex, 1);
-            await cartModel.updateOne({_id: cartId}, {products: cartSelected.products});
-            return {message: "Product eliminated"}
-        } catch (error) {
-            console.log(error);
-        }
+            if(!!!productExits) {
+                CustomError.createError({
+                    name: "No existe el carrito",
+                    cause: cartNotFound(id),
+                    message: `No existe carrito con el ID: ${id}`,
+                    code: EErrors.CARTS.CART_NOT_FOUND
+                })
+            } else {
+                const productIndex = cartSelected.products.indexOf(productExits);
+                console.log(productIndex)
+                cartSelected.products.splice(productIndex, 1);
+                await cartModel.updateOne({_id: cartId}, {products: cartSelected.products});
+                return {message: "Product eliminated"}
+            }
+        
     }
 
     //Funciona

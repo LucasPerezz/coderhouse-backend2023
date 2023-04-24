@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jtw = require('jsonwebtoken');
 const config = require('./config/config');
+const { faker } = require('@faker-js/faker');
 
 const PRIVATE_KEY = "coderhouse";
 
@@ -36,11 +37,68 @@ const handlePolicies = policies => (req, res, next) => {
     next();
 }
 
+
+//Testing
+const randomRol = () => {
+    let roles = ['user', 'admin'];
+    let randomIndex = Math.round(Math.random() * roles.length);
+
+    return roles[randomIndex];
+}
+
+const generateUser = () => {
+    return {
+        first_name: faker.name.firstName(),
+        last_name: faker.name.lastName(),
+        email: faker.internet.email(),
+        age: faker.random.numeric(2),
+        password: faker.internet.password(16),
+        rol: randomRol()
+    }
+}
+
+const generateUsers = qty => {
+    let users = [];
+    for(let i = 0; i < qty; i++) {
+        users.push(generateUser());
+    }
+
+    return users;
+}
+
+const generateProduct = ()=>{
+    return {
+        _id: faker.random.alphaNumeric(10),
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        code: faker.random.alphaNumeric(5),
+        price: Number(faker.random.numeric(4)),
+        status: true,
+        stock: Number(faker.random.numeric(3)),
+        category: faker.commerce.department(),
+        thumbnails: [faker.image.imageUrl()]
+    }
+}
+
+const generateProducts = qty=>{
+    const products = [];
+
+    for (let i = 0; i < qty; i++) {
+        products.push(generateProduct());
+    }
+
+    return products;
+}
+
 module.exports = {
     createHash,
     isValidPassword,
     generateToken,
     authToken,
-    handlePolicies
+    handlePolicies,
+    generateUsers,
+    generateUser,
+    generateProducts,
+    generateProduct
 }
 

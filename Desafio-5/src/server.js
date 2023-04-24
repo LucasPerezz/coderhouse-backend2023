@@ -28,6 +28,7 @@ const MessageManager = require('./dao/MessageManager');
 const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
 const compression = require('express-compression');
+const mocksRouter = require('./routes/mocks.routes');
 
 
 const port = process.env.PORT | 8080;
@@ -96,6 +97,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/', viewsRouter);
+app.use('/', mocksRouter);
 app.use(errorHandler);
 
 
