@@ -11,8 +11,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
-require('dotenv').config();
 const errorHandler = require('./services/errorHandler.middleware');
+const config = require('./config/config');
 
 
 
@@ -29,9 +29,10 @@ const sessionsRouter = require('./routes/sessions.routes')
 const viewsRouter = require('./routes/views.router');
 const compression = require('express-compression');
 const mocksRouter = require('./routes/mocks.routes');
+const { addLogger } = require('./utils');
 
 
-const port = process.env.PORT | 8080;
+const port = config.port;
 
 /**************************** MAILING & TWILIO ***********************/
 
@@ -73,7 +74,7 @@ app.use(session({
   resave:false,
   saveUninitialized:false,
   store: MongoStore.create({
-      mongoUrl: "mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority",
+      mongoUrl: config.mongo_url,
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
       ttl:30
   }),
@@ -99,6 +100,7 @@ app.use('/sessions', sessionsRouter);
 app.use('/', viewsRouter);
 app.use('/', mocksRouter);
 app.use(errorHandler);
+app.use(addLogger);
 
 
 //Chat
@@ -142,8 +144,9 @@ server.listen(port, () => {
 });
 
 
+
 //MongoDB
-mongoose.connect("mongodb+srv://coderuser:123@backendcoder.qlbmmgi.mongodb.net/?retryWrites=true&w=majority", (err) => {
+mongoose.connect(config.mongo_url, (err) => {
   if(err) {
     console.log("Cannot conect to database: " + err)
     process.exit()

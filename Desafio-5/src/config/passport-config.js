@@ -4,16 +4,15 @@ const userService = require('../dao/models/users.model');
 const { createHash, isValidPassword } = require('./../utils');
 const GithubStrategy = require('passport-github2');
 const config = require('./config');
-const { default: mongoose } = require('mongoose');
 const cartModel = require('../dao/models/cart.model');
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
 
     passport.use('github', new GithubStrategy({
-        clientID: "Iv1.2102284da1cea9cb",
-        clientSecret: "e84a2609544cffc51d82c49f505468a1cf55d4cb",
-        callbackURL: "http://localhost:8080/sessions/githubcallback"
+        clientID: config.github_client_id,
+        clientSecret: config.github_client_secret,
+        callbackURL: config.github_callback_url
     },  async (accessToken, refreshToken, profile, done) => {
         try {
             console.log(profile);

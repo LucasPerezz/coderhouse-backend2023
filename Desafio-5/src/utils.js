@@ -1,9 +1,60 @@
 const bcrypt = require('bcrypt');
 const jtw = require('jsonwebtoken');
-const config = require('./config/config');
 const { faker } = require('@faker-js/faker');
+const winston = require('winston');
+const config = require('./config/config');
 
-const PRIVATE_KEY = "coderhouse";
+const customLevelsOptions = {
+    levels:{
+        fatal: 0,
+        error: 1,
+        warning: 2,
+        info: 3,
+        http: 4,
+        debug: 5,
+    },
+    colors:{
+        fatal: 'red',
+        error: 'red',
+        warning: 'yellow',
+        info: 'blue',
+        http: 'cyan',
+        debug: 'grey'
+    }
+}
+
+const transports = (config.mode == 'DEVELOPMENT') ?
+    [
+        new winston.transports.Console({
+            level: config.debug ? "debug" : "info",
+            format: winston.format.combine(winston.format.colorize({colors: customLevelsOptions.colors}), winston.format.simple())
+        })
+    ]
+    :
+    [
+        new winston.transports.Console({
+            level: "info",
+            format: winston.format.combine(winston.format.colorize({colors: customLevelsOptions.colors}), winston.format.simple())
+        }),
+        new winston.transports.File({
+            filename: './logs/error.log',
+            level: "error",
+            format: winston.format.simple()
+        })
+    ]
+
+    const logger = winston.createLogger({
+        levels: customLevelsOptions.levels,
+        transports
+    })
+
+const addLogger = (req, res, next) => {
+    req.logger = logger;
+    req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`)
+    next();
+}
+
+const PRIVATE_KEY = config.private_key;
 
 const generateToken = (user) => {
     const expirationTime = new Date();
@@ -99,6 +150,7 @@ module.exports = {
     generateUsers,
     generateUser,
     generateProducts,
-    generateProduct
+    generateProduct,
+    addLogger
 }
 
