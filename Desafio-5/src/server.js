@@ -30,9 +30,22 @@ const viewsRouter = require('./routes/views.router');
 const compression = require('express-compression');
 const mocksRouter = require('./routes/mocks.routes');
 const { addLogger } = require('./utils');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUiExpress = require('swagger-ui-express');
 
 
 const port = config.port;
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: "Documentacion API",
+      description: "API realizada para proyecto"
+    }
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+const spects = swaggerJSDoc(swaggerOptions);
 
 /**************************** MAILING & TWILIO ***********************/
 
@@ -83,6 +96,7 @@ app.use(cors());
 app.use(compression({
   brotli: {enable: true, zlib:{}}
 }));
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(spects));
 
 initializePassport();
 app.use(passport.initialize());

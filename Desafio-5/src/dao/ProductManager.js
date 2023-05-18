@@ -66,6 +66,7 @@ class ProductManager {
                     code: EErrors.PRODUCTS.PRODUCT_NOT_FOUND
                 })
             } else {
+                console.log(productFound);
                 return productFound;
             }
     }

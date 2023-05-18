@@ -45,6 +45,7 @@ const getProductById = async (req, res, next) => {
     try {
         const params = req.params.id;
         res.json(await ProductManager.getProductById(params));
+
     } catch (error) {
         next(error);
     }
