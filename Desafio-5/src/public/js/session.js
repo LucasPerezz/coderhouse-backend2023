@@ -3,7 +3,7 @@ const elementExits = (id) => document.getElementById(id) !== null;
 elementExits("login") && document.getElementById("login").addEventListener("click", (e) => {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    fetch("/sessions/login", {
+    fetch("coderhouse-backend2023-production.up.railway.app/sessions/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -17,9 +17,9 @@ elementExits("login") && document.getElementById("login").addEventListener("clic
     .then(data => {
         console.log(data);
         if(data.msg === "success") {
-            window.location.href = `/`;
+            window.location.href = `coderhouse-backend2023-production.up.railway.app/`;
         } else {
-            window.location.href = "/sessions/faillogin"
+            window.location.href = "coderhouse-backend2023-production.up.railway.app/sessions/faillogin"
         }
     })
     .catch(err => console.log(err))
@@ -37,7 +37,7 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
         alert("Todos los campos son obligatorios")
     } else {
         const data = {first_name, last_name, email, password, age}
-        fetch("http://localhost:8080/sessions/signup", {
+        fetch("coderhouse-backend2023-production.up.railway.app/sessions/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -47,9 +47,9 @@ elementExits("signup") && document.getElementById("signup").addEventListener("cl
         .then(res => res.json())
         .then(data => {
             if(data.msg === "success") {
-                window.location.href = "http://localhost:8080/sessions/login"
+                window.location.href = "coderhouse-backend2023-production.up.railway.app/sessions/login"
             } else {
-                window.location.href = "http://localhost:8080/sessions/failsignup"
+                window.location.href = "coderhouse-backend2023-production.up.railway.app/sessions/failsignup"
             }
         })
         .catch(err => console.log(err)) 
