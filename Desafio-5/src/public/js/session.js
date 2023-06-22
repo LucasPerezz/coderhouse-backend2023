@@ -3,7 +3,7 @@ const elementExits = (id) => document.getElementById(id) !== null;
 elementExits("login") && document.getElementById("login").addEventListener("click", (e) => {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    fetch("http://localhost:8080/sessions/login", {
+    fetch("/sessions/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -17,9 +17,9 @@ elementExits("login") && document.getElementById("login").addEventListener("clic
     .then(data => {
         console.log(data);
         if(data.msg === "success") {
-            window.location.href = `http://localhost:8080/`;
+            window.location.href = `/`;
         } else {
-            window.location.href = "http://localhost:8080/sessions/faillogin"
+            window.location.href = "/sessions/faillogin"
         }
     })
     .catch(err => console.log(err))
