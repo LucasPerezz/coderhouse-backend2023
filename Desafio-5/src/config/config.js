@@ -15,5 +15,6 @@ module.exports = {
     github_client_secret: process.env.GITHUB_CLIENT_SECRET,
     github_client_id: process.env.GITHUB_CLIENT_ID,
     github_callback_url: process.env.GITHUB_CALLBACK_URL,
-    private_key: process.env.PRIVATE_KEY
+    private_key: process.env.PRIVATE_KEY,
+    stripe_key: process.env.STRIPE_KEY
 }

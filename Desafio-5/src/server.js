@@ -32,7 +32,7 @@ const mocksRouter = require('./routes/mocks.routes');
 const { addLogger } = require('./utils');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUiExpress = require('swagger-ui-express');
-
+const paymentsRouter = require('./routes/payments.routes');
 
 const port = config.port;
 const swaggerOptions = {
@@ -113,6 +113,7 @@ app.use('/api/carts', cartsRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/', viewsRouter);
 app.use('/', mocksRouter);
+app.use('/api/payments', paymentsRouter);
 app.use(errorHandler);
 app.use(addLogger);
 
