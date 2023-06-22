@@ -34,7 +34,6 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUiExpress = require('swagger-ui-express');
 const paymentsRouter = require('./routes/payments.routes');
 
-const port = config.port;
 const swaggerOptions = {
   definition: {
     openapi: '3.0.1',
@@ -152,11 +151,6 @@ io.on('connection', socket=>{
         if(validationObj.validation) socket.broadcast.emit('new_user_connected', user);
     });
 })
-
-
-server.listen(port, () => {
-  console.log("Listening on 8080")
-});
 
 
 
